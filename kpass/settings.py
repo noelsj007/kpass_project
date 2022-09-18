@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "adminapp",
     "ksrtc",
     "users",
+    "irctc",
 ]
 
 MIDDLEWARE = [
