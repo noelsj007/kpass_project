@@ -6,6 +6,10 @@ from django.contrib.auth.forms import UserCreationForm
 def homePage(request):
     return render(request, 'home.html')
 
+def testPage(request):
+    return render(request, 'test.html')
+
+
 def loginPage(request):
     return render(request, 'login.html')
 
