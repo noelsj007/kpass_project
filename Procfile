@@ -1,0 +1,1 @@
+web gunicorn kpass.wsgi:application --log-file -
