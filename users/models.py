@@ -57,6 +57,10 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+    def __str__(self):
+        return self.first_name
+
+
 # class CustomUser(AbstractUser):
 #     username = None
 #     email = models.EmailField(_('email address'), unique=True)
