@@ -13,31 +13,32 @@
   <div class="container">
     <div class="title">Registration</div>
     <div class="content">
-      <form action="#">
+      <form method="POST" action="#">
+        {% csrf_token %}
         <div class="user-details">
           <div class="input-box">
-            <span class="details">Full Name</span>
-            <input type="text" placeholder="Enter your name" required>
+            <span class="details">First Name</span>
+            {{form.first_name}}
           </div>
           <div class="input-box">
-            <span class="details">Username</span>
-            <input type="text" placeholder="Enter your username" required>
+            <span class="details">Last Name</span>
+            {{form.last_name}}
           </div>
           <div class="input-box">
             <span class="details">Email</span>
-            <input type="text" placeholder="Enter your email" required>
+            {{form.email}}
           </div>
           <div class="input-box">
             <span class="details">Phone Number</span>
-            <input type="text" placeholder="Enter your number" required>
+            {{form.mobile}}
           </div>
           <div class="input-box">
             <span class="details">Password</span>
-            <input type="text" placeholder="Enter your password" required>
+            {{form.password1}}
           </div>
           <div class="input-box">
             <span class="details">Confirm Password</span>
-            <input type="text" placeholder="Confirm your password" required>
+            {{form.password2}}
           </div>
         </div>
         <div class="gender-details">
@@ -67,5 +68,8 @@
     </div>
   </div>
 
+  <script>
+
+  </script>
 </body>
 </html>
