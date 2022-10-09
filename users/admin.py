@@ -8,7 +8,7 @@ class CustomUserAdmin(UserAdmin):
     """Define admin model for custom User model with no username field."""
     fieldsets = (
         (None, {'fields': ('email', 'password', 'mobile')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'gender')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -16,10 +16,10 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('first_name', 'last_name', 'mobile', 'email', 'password1', 'password2', 'gender'),
+            'fields': ('first_name', 'last_name', 'mobile', 'email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'mobile', 'gender')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'mobile')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 

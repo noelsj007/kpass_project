@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -13,20 +14,32 @@
   <div class="container">
     <div class="title">Login</div>
     <div class="content">
-      <form action="#">
+      <form action="" method="POST">
+        {% csrf_token %}
         <div class="user-details">
           <div class="input-box">
-            <span class="details">UserName</span>
-            <input type="text" placeholder="Enter your username" required>
+            <span class="details">Email</span>
+            <input type="text" placeholder="Enter your Email" required name="email">
           </div>
           <div class="input-box">
             <span class="details">Password</span>
-            <input type="text" placeholder="Enter your Password" required>
+            <input type="password" placeholder="Enter your Password" required name="password">
           </div>
         </div>
         <div class="button">
           <input type="submit" value="Login">
         </div>
+        <center>
+        {% for message in messages %}
+            <p style='background-color: grey;
+            color: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            margin: bottom 10px;'>{{message}}</p><br>
+        {% endfor %}
+      </center>
+        Don't have an Account 
+        <a href='/register/'>Click Here
       </form>
     </div>
   </div>

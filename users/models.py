@@ -38,18 +38,12 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractUser):
-
-    GENDER = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Others', 'Others')
-    )
+    
     username = None
     email = models.EmailField(_('email address'), unique=True)
     mobile = models.CharField(max_length=15, null=True, blank= True)
     is_verified = models.BooleanField(default=False)
     forget_password = models.CharField(max_length=255, blank= True, null=True)
-    gender = models.CharField(max_length=255, blank= True, null=True, choices=GENDER)
 
     USERNAME_FIELD = 'email'
 
