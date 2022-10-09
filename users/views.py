@@ -25,11 +25,13 @@ def loginPage(request):
 
 
 
-def registerPage(req):
+def registerPage(request):
     form = UserAdminCreationForm()
-    if req.method == 'POST':
-        form = UserAdminCreationForm(req.POST)
+    if request.method == 'POST':
+        form = UserAdminCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('register')
-    return render(req, 'register.html', {'form': form})
+            return redirect('login.html')
+        else:
+            print('error')
+    return render(request, 'register.html', {'form': form})
