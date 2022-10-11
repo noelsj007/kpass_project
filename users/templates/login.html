@@ -11,10 +11,18 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
 <body>
+  
   <div class="container">
-    <div class="title">Login</div>
-    <div class="content">
+    
+    <div class="title">Login
+      <a  href="{% url 'home' %}" style = "float: right;"><img style="height:18px;" src="{% static 'close.png' %}"></a>
+
+    </div>
+    
+        <div class="content">
+      
       <form action="" method="POST">
+        
         {% csrf_token %}
         <div class="user-details">
           <div class="input-box">

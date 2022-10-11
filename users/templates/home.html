@@ -54,14 +54,19 @@
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#services">Services</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-          <li><a class="getstarted scrollto" href="/register">Login</a></li>
-          
+          {% if request.user.is_authenticated %}
+          <li><a class="nav-link scrollto" href="#contact">Hello {{request.user}}</a></li>
+          <li><a class="getstarted scrollto" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+          <li><a class="getstarted scrollto" href="{% url 'login' %}">Login</a></li>
+          {% endif %}
         </ul>
         
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
-
+       
     </div>
+    
   </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
@@ -72,6 +77,16 @@
         <div class="col-lg-6 d-flex flex-column justify-content-center">
           <h1 data-aos="fade-up">Get Your KSRTC pass or IRCTC season Ticket Effortless</h1>
           <h2 data-aos="fade-up" data-aos-delay="400">The complete platform to apply for KSRTC student pass or IRCTC season ticket</h2>
+          {% if request.user.is_authenticated %}
+          <div data-aos="fade-up" data-aos-delay="600">
+            <div class="text-center text-lg-start">
+              <a href="/" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                <span>Go to Profile</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          {% else %}
           <div data-aos="fade-up" data-aos-delay="600">
             <div class="text-center text-lg-start">
               <a href="/register" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
@@ -80,6 +95,7 @@
               </a>
             </div>
           </div>
+          {% endif %}
         </div>
         <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
           <img src="{% static 'staticuser/img/hero-img.png' %}" class="img-fluid" alt="">

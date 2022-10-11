@@ -11,7 +11,10 @@
    </head>
 <body>
   <div class="container">
-    <div class="title">Registration</div>
+    <div class="title">Registration
+      <a  href="{% url 'home' %}" style = "float: right;"><img style="height:18px;" src="{% static 'close.png' %}"></a>
+
+    </div>
     <div class="content">
       <form method="POST" action="#">
         {% csrf_token %}

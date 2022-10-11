@@ -21,6 +21,9 @@ body{
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
+.container .alignright{
+  float: right;
+}
 .container .title{
   font-size: 25px;
   font-weight: 500;
