@@ -80,8 +80,8 @@
           {% if request.user.is_authenticated %}
           <div data-aos="fade-up" data-aos-delay="600">
             <div class="text-center text-lg-start">
-              <a href="/" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
-                <span>Go to Profile</span>
+              <a href="{% url 'dash' %}" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                <span>Go to DashBoard</span>
                 <i class="bi bi-arrow-right"></i>
               </a>
             </div>

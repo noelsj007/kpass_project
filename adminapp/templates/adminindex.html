@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Kpass admin-Dashboard</title>
+    <title>Kpass Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'staticadmin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -31,11 +31,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
+                <!-- <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Kpass Admin <sup></sup></div>
+                </div> -->
+                <div class="sidebar-brand-text mx-3" style="padding-right: 20px;">Kpass<sup></sup></div>
             </a>
 
             <!-- Divider -->
@@ -205,7 +205,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="padding-top: 11px;" ><h5>{{request.user}}</h5></span>
                                 <img class="img-profile rounded-circle"
                                     src="{% static 'staticadmin/img/undraw_profile.svg' %}">
                             </a>
@@ -225,7 +225,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="{% url 'logout' %}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -251,6 +251,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    
      <!-- Bootstrap core JavaScript-->
      <script src="{% static 'staticadmin/vendor/jquery/jquery.min.js' %}"></script>
      <script src="{% static 'staticadmin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

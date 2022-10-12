@@ -27,4 +27,4 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(get_user_model(), CustomUserAdmin)
 
 def __str__(self):
-    return self.first_name
+    return self.email
