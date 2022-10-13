@@ -13,8 +13,9 @@ from .decorator import *
 def homePage(request):
     return render(request, 'home.html')
 
-
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
+
 def dashPage(request):
     return render(request, 'userdashboard.html')
 
