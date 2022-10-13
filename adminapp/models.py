@@ -1,3 +1,4 @@
+import email
 from random import choices
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -41,3 +42,4 @@ class CustomAdmin(AbstractUser):
 
     def __str__(self):
         return self.first_name
+
