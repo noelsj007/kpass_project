@@ -22,3 +22,15 @@ class SchoolDetail(models.Model):
 
     def __str__(self):
         return self.school_name
+
+class PassForm(models.Model):
+
+    TIME=(
+        ('onemonth', 'onemonth'),
+        ('threemonths', 'threemonths'),
+        ('sixmonths', 'sixmonths'),
+        ('oneyear', 'oneyear'),
+    )
+    time_periode = models.CharField(max_length=50, blank= True, null=True, choices=TIME)
+    age = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)

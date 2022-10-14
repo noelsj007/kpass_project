@@ -15,7 +15,7 @@ def homePage(request):
     return render(request, 'adminhome.html')
 
 
-
+@allowed_users(allowed_roles=['SuperAdmin'])
 def BusRegisterPage(request):
 
     form = UserAdminCreationForm()
@@ -35,7 +35,7 @@ def BusRegisterPage(request):
     return render(request, 'register.html', {'form': form})
 
 
-
+@allowed_users(allowed_roles=['SuperAdmin'])
 def TrainRegisterPage(request):
 
     form = UserAdminCreationForm()
@@ -50,6 +50,24 @@ def TrainRegisterPage(request):
             user.groups.add(group)
 
             
+
+
+            # messages.success(request, 'Account Created for ' + user + ' Please login')
+            return redirect('superhome')
+    return render(request, 'register.html', {'form': form})
+
+def UserRegisterPage(request):
+
+    form = UserAdminCreationForm()
+    if request.method == 'POST':
+        form = UserAdminCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('first_name')
+
+
+            group = Group.objects.get(name='customer') 
+            user.groups.add(group)
 
 
             # messages.success(request, 'Account Created for ' + user + ' Please login')

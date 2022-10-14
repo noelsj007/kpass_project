@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.homePage, name='superhome'),
     path('busadminregister/', views.BusRegisterPage, name='busregister'),
     path('trainadminregister/', views.TrainRegisterPage, name='trainregister'),
+    path('userregister/', views.UserRegisterPage, name='userregister'),
 ]

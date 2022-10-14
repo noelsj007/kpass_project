@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(BusRoute)
 admin.site.register(SchoolDetail)
+admin.site.register(PassForm)

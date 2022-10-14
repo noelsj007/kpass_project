@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Kpass Dashboard</title>
+    <title>Kpass-Admin Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'staticadmin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -35,7 +35,7 @@
                 <!-- <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div> -->
-                <div class="sidebar-brand-text mx-3" style="padding-right: 20px;">Kpass<sup></sup></div>
+                <div class="sidebar-brand-text mx-3" style="padding-right: 20px;">Kpass-Admin<sup></sup></div>
             </a>
 
             <!-- Divider -->
@@ -68,6 +68,7 @@
                         <h6 class="collapse-header">Register Admins:</h6>
                         <a class="collapse-item" href="{% url 'trainregister' %}">Train Admin</a>
                         <a class="collapse-item" href="{% url 'busregister' %}">Bus Admin</a>
+                        <a class="collapse-item" href="{% url 'userregister' %}">Users</a>
                     </div>
                 </div>
             </li>
