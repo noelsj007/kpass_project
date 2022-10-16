@@ -1,5 +1,5 @@
 from django.db import models
-
+from adminapp import models as admindb
 # Create your models here.
 
 
@@ -23,41 +23,36 @@ class TrainRoute(models.Model):
     def __str__(self):
         return self.Route_name
 
-class SchoolDetail(models.Model):
-    school_name = models.CharField(max_length=100, blank= True, null=True)
-    school_email = models.CharField(max_length=100, blank= True, null=True)
-    school_address = models.CharField(max_length=100, blank= True, null=True)
-    school_phone = models.CharField(max_length=15, blank= True, null=True)
-    is_verified = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.school_name
 
 class SubTime(models.Model):
     sub_time = models.IntegerField(null=True)
-    sub_price = models.IntegerField(null=True, blank=True)
 
 
-class PassForm(models.Model):
-
-    TIME=(
-        ('onemonth', 'onemonth'),
-        ('threemonths', 'threemonths'),
-        ('sixmonths', 'sixmonths'),
-        ('oneyear', 'oneyear'),
-    )
-    time_periode = models.CharField(max_length=50, blank= True, null=True, choices=TIME)
-    age = models.CharField(max_length=20, blank=True, null=True)
-    address = models.CharField(max_length=100, blank=True, null=True)
 
 class StudentPassForm(models.Model):
 
-    TIME=(
-        ('onemonth', 'onemonth'),
-        ('threemonths', 'threemonths'),
-        ('sixmonths', 'sixmonths'),
-        ('oneyear', 'oneyear'),
-    )
-    time_periode = models.CharField(max_length=50, blank= True, null=True, choices=TIME)
-    age = models.CharField(max_length=20, blank=True, null=True)
-    address = models.CharField(max_length=100, blank=True, null=True)
+    name= models.CharField(max_length=100, default=None)
+    time_periode = models.ForeignKey(SubTime, on_delete = models.CASCADE, default=True)
+    school_name = models.ForeignKey(admindb.SchoolDetail, on_delete = models.CASCADE, default=True)
+    start_place = models.ForeignKey(Place, null=True, blank=True, on_delete =models.CASCADE, related_name="pass_start_sp")
+    end_place = models.ForeignKey(Place, null=True, blank = True, on_delete = models.CASCADE, related_name = 'pass_end_sp')
+    age = models.IntegerField(blank=True, null=True, default=True)
+    address = models.TextField(max_length=100, blank=True, null=True)
+    adhaar_no = models.CharField(max_length=200, null=True, blank=True)
+    mobile = models.CharField(max_length=200, blank=True, default=None)
+    adhaar_image = models.ImageField(upload_to='static/irctcimage/adhaar', null=True, default=None)
+    profileimage = models.ImageField(upload_to='static/irctcimage/profileimage', null=True, default=None)
+    idimage = models.ImageField(upload_to='static/irctcimage/idimage', null=True, default=None)
+
+class PassForm(models.Model):
+    name= models.CharField(max_length=100, default=None)
+    time_periode = models.ForeignKey(SubTime, on_delete = models.CASCADE, default=True)
+    start_place = models.ForeignKey(Place, null=True, blank=True, on_delete =models.CASCADE, related_name="pass_start_tp")
+    end_place = models.ForeignKey(Place, null=True, blank = True, on_delete = models.CASCADE, related_name = 'pass_end_tp')
+    age = models.IntegerField(blank=True, null=True, default=True)
+    address = models.TextField(max_length=100, blank=True, null=True)
+    adhaar_no = models.CharField(max_length=200, null=True, blank=True)
+    mobile = models.CharField(max_length=200, blank=True, default=None)
+    adhaar_image = models.ImageField(upload_to='static/irctcimage/adhaar', null=True, default=None)
+    profileimage = models.ImageField(upload_to='static/irctcimage/profileimage', null=True, default=None)
+

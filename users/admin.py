@@ -3,11 +3,13 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
+from users.models import *
+
 
 class CustomUserAdmin(UserAdmin):
     """Define admin model for custom User model with no username field."""
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'mobile')}),
+        (None, {'fields': ('email', 'password', 'mobile', 'is_student', 'school_name')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
@@ -19,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('first_name', 'last_name', 'mobile', 'email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'mobile')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'mobile', 'is_student', 'school_name')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
@@ -28,3 +30,7 @@ admin.site.register(get_user_model(), CustomUserAdmin)
 
 def __str__(self):
     return self.email
+
+
+admin.site.register(TrainVirtualPass)
+admin.site.register(BusVirtualPass)

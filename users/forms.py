@@ -9,4 +9,4 @@ class UserAdminCreationForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['first_name', 'last_name', 'mobile', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'mobile', 'email', 'password1', 'password2', 'is_student', 'school_name']

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['BusAdmin'])
+@bus_allowed_users(allowed_roles=['BusAdmin'])
 def homePage(request):
     return render(request, 'bushome.html')
 

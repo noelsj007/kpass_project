@@ -72,6 +72,6 @@ def registerPage(request):
             user.groups.add(group)
 
 
-            messages.success(request, 'Account Created for ' + user + ' Please login')
+            messages.success(request, 'Account Created for ' + str(user) + ' Please login')
             return redirect('login')
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'userregister.html', {'form': form})

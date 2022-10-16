@@ -32,7 +32,7 @@ def BusRegisterPage(request):
 
             # messages.success(request, 'Account Created for ' + user + ' Please login')
             return redirect('superhome')
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'adminregister.html', {'form': form})
 
 
 @allowed_users(allowed_roles=['SuperAdmin'])
@@ -54,7 +54,7 @@ def TrainRegisterPage(request):
 
             # messages.success(request, 'Account Created for ' + user + ' Please login')
             return redirect('superhome')
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'adminregister.html', {'form': form})
 
 def UserRegisterPage(request):
 
@@ -72,4 +72,4 @@ def UserRegisterPage(request):
 
             # messages.success(request, 'Account Created for ' + user + ' Please login')
             return redirect('superhome')
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'userregister.html', {'form': form})

@@ -4,6 +4,6 @@ from .models import *
 # Register your models here.
 
 admin.site.register(BusRoute)
-admin.site.register(SchoolDetail)
+admin.site.register(SubTime)
 admin.site.register(PassForm)
 admin.site.register(Place)
