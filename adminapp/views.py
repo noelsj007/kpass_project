@@ -1,18 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from django.template import ContextPopException
 from .forms import UserAdminCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from .superdecorator import *
+from users import models as Users
 
 # Create your views here.
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['SuperAdmin'])
 def homePage(request):
-    return render(request, 'adminhome.html')
+
+    
+    admin_count = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin', 'BusAdmin', 'SuperAdmin']).count()
+    user_count = Users.CustomUser.objects.filter(groups__name__in = ['customer']).count()
+
+    print(admin_count, user_count)
+    context={'admin_count': admin_count, 'user_count': user_count}
+
+    return render(request, 'adminhome.html', context )
 
 
 @allowed_users(allowed_roles=['SuperAdmin'])
