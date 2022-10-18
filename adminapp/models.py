@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
+
 # Create your models here.
 
 class CustomAdminManager(BaseUserManager):
@@ -46,6 +47,7 @@ class CustomAdmin(AbstractUser):
 
 class SchoolDetail(models.Model):
     school_name = models.CharField(max_length=100, blank= True, null=True)
+    school_place = models.CharField(max_length=100, blank= True, null=True)
     school_email = models.CharField(max_length=100, blank= True, null=True)
     school_address = models.CharField(max_length=100, blank= True, null=True)
     school_phone = models.CharField(max_length=15, blank= True, null=True)

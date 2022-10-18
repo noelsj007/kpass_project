@@ -80,6 +80,6 @@ class BusVirtualPass(models.Model):
 class TrainVirtualPass(models.Model):
     name = models.CharField(max_length=100, null=True)
     date = models.DateTimeField(blank=True, null=True)
-    start_place = models.ForeignKey(traindb.Place, null=True, blank=True, on_delete =models.CASCADE, related_name="star_place_pass")
-    end_place = models.ForeignKey(traindb.Place, null=True, blank = True, on_delete = models.CASCADE, related_name = 'end_place_pass')
+    start_place = models.ForeignKey(traindb.TrainPlace, null=True, blank=True, on_delete =models.CASCADE, related_name="star_place_pass")
+    end_place = models.ForeignKey(traindb.TrainPlace, null=True, blank = True, on_delete = models.CASCADE, related_name = 'end_place_pass')
     log_check = models.BooleanField(default=False, null=True)
