@@ -26,6 +26,27 @@ def homePage(request):
 
 
 @allowed_users(allowed_roles=['SuperAdmin'])
+def BusAdminPage(request):
+    bus_user = Users.CustomUser.objects.filter(groups__name__in=['BusAdmin'])
+
+
+
+    context = {'bus_user': bus_user}
+
+    return render(request, 'bussystemuser.html', context)
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def TrainAdminPage(request):
+    train_user = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin'])
+
+
+
+    context = {'train_user': train_user}
+    return render(request, 'trainsystemuser.html', context)
+
+
+
+@allowed_users(allowed_roles=['SuperAdmin'])
 def BusRegisterPage(request):
 
     form = UserAdminCreationForm()

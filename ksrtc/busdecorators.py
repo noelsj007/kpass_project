@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate
 
 def bus_unauthenticated_user(view_func):
@@ -28,7 +28,7 @@ def bus_allowed_users(allowed_roles = []):
                 return view_func(request, *args, **kwargs)
 
             else:
-                return HttpResponse('You are not allowed to view this')
+                return render(request, '404.html')
 
         return wrapper_func
 

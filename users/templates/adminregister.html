@@ -419,7 +419,8 @@
     </div>
     <div class="row clearfix">
       <div class="">
-        <form>
+        <form method="POST">
+          {% csrf_token %}
           <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
             {{form.email}}
           </div>

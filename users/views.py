@@ -21,8 +21,8 @@ def dashPage(request):
 
 
 
-def testPage(request):
-    return render(request, 'test.html')
+def notfoundPage(request):
+    return render(request, '404.html')
 
 def logoutUser(request):
     logout(request)
