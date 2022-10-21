@@ -19,22 +19,25 @@ class UserAdminCreationForm(UserCreationForm):
 
 
 class SchoolDetailForm(ModelForm):
-    model = SchoolDetail()
-    fields = ['bus_school_name', 'bus_school_place', 'bus_school_address', 'bus_school_phone', 'bus_school_email']
 
+    class Meta:
+        model = SchoolDetail
+        fields = '__all__'
 
 # forms for ksrtc admin
 class KstrcPlaceForms(ModelForm):
-    model = Place()
-    fields = ['bus_place_name', 'bus_place_district', 'bus_place_state']
+
+    class Meta:
+        model = Place
+        fields = '__all__'
 
 
 class BusRouteForm(ModelForm):
-    model = BusRoute()
+    model = BusRoute
     fields = ['bsu_Route_name', 'bsu_start_place', 'bus_end_place', 'bus_route_places']
 
 class KsrtcSubTimeForm(ModelForm):
-    model = SubTime()
+    model = SubTime
     fields = ['bus_sub_time']
 
 class KsrtcPassFormField(ModelForm):

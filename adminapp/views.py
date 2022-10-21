@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.template import ContextPopException
-from .forms import UserAdminCreationForm
+from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -43,6 +43,15 @@ def TrainAdminPage(request):
 
     context = {'train_user': train_user}
     return render(request, 'trainsystemuser.html', context)
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def SchoolPage(request):
+    school_details = SchoolDetail.objects.all()
+
+
+
+    context = {'school_details': school_details}
+    return render(request, 'busschool.html', context)
 
 
 
@@ -101,6 +110,16 @@ def UserRegisterPage(request):
             user.groups.add(group)
 
 
-            # messages.success(request, 'Account Created for ' + user + ' Please login')
+            messages.success(request, 'Account Created for ' + str(username) + ' Please login')
             return redirect('superhome')
     return render(request, 'userregister.html', {'form': form})
+
+def SchoolRegisterPage(request):
+    form = SchoolDetailForm()
+    if request.method == 'POST':
+        form = SchoolDetailForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('superhome')
+    return render(request, 'schoolregister.html', {'form': form})
