@@ -12,6 +12,17 @@ class UserAdminCreationForm(UserCreationForm):
     """
     A Custom form for creating new users.
     """
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
+
+    mobile = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Mobile'}))
+
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+
+    password2 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
 
     class Meta:
         model = get_user_model()
@@ -19,6 +30,15 @@ class UserAdminCreationForm(UserCreationForm):
 
 
 class SchoolDetailForm(ModelForm):
+
+    school_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'School Name'}))
+    school_place = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'School Place'}))
+    school_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    school_phone = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Mobile'}))
+    school_address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}))
+
+
+
 
     class Meta:
         model = SchoolDetail
@@ -33,35 +53,50 @@ class KstrcPlaceForms(ModelForm):
 
 
 class BusRouteForm(ModelForm):
-    model = BusRoute
-    fields = ['bsu_Route_name', 'bsu_start_place', 'bus_end_place', 'bus_route_places']
+
+    class Meta:
+        model = BusRoute
+        fields = '__all__'
 
 class KsrtcSubTimeForm(ModelForm):
-    model = SubTime
-    fields = ['bus_sub_time']
+
+    class Meta:
+        model = SubTime
+        fields = '__all__'
 
 class KsrtcPassFormField(ModelForm):
-    model = PassForm()
-    fields = ['bus_name', 'bus_time_periode', 'bus_school_name', 'bus_start_place','bus_end_place', 'bus_age', 'bus_address', 'bus_adhaar_no', 'bus_mobile','bus_idimage','bus_adhaarimage', 'bus_profileimage']
+
+    class Meta:
+        model = PassForm
+        fields = '__all__'
 
 # trian forms for super admin
 
 class IrctcPlaceForms(ModelForm):
-    model = TrainPlace()
-    fields = ['tplace_name', 'tplace_district', 'tplace_state']
+
+    class Meta:
+        model = TrainPlace
+        fields = '__all__'
 
 class TrainRouteForm(ModelForm):
-    model = TrainRoute()
-    fields = ['tRoute_name', 'tstart_place', 'tend_place', 'troute_places']
+
+    class Meta:
+        model = TrainRoute
+        fields = '__all__'
 
 class IrctcSubTimeForm(ModelForm):
-    model = TrainSubTime()
-    fields = ['tsub_time']
+
+    class Meta:
+        
+        model = TrainSubTime
+        fields = '__all__'
 
 class IrctcStudentPassFormField(ModelForm):
-    model = TrainStudentPassForm()
-    fields = ['tname', 'ttime_periode', 'tschool_name', 'tstart_place','tend_place', 'tage', 'taddress', 'tadhaar_no', 'tmobile','tidimage','tadhaarimage', 'tprofileimage']
+    class Meta:
+        model = TrainStudentPassForm
+        fields = '__all__'
 
 class IrctcPassFormField(ModelForm):
-    model = TrainPassForm()
-    fields = ['tname', 'ttime_periode', 'tschool_name', 'tstart_place','tend_place', 'tage', 'taddress', 'tadhaar_no', 'tmobile','tadhaarimage', 'tprofileimage']
+    class Meta:
+        model = TrainPassForm
+        fields = '__all__'

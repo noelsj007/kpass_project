@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from .decorator import *
+from .models import *
 
 # Create your views here.
 
@@ -19,7 +20,9 @@ def homePage(request):
 def dashPage(request):
     return render(request, 'userdashboard.html')
 
+def UserProfilePage(request):
 
+    return render (request, 'profile.html')
 
 def notfoundPage(request):
     return render(request, '404.html')
