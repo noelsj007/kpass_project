@@ -134,6 +134,7 @@ table td:nth-child(4) {
 							<th>Email</th>
 							<th>Mobile</th>
 							<th>Start date</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tfoot>
@@ -143,6 +144,7 @@ table td:nth-child(4) {
 							<th>Email</th>
 							<th>Mobile</th>
 							<th>Start date</th>
+							<th>Action</th>
 						</tr>
 					</tfoot>
 					<tbody>
@@ -153,6 +155,7 @@ table td:nth-child(4) {
 							<td>{{i.email}}</td>
 							<td>{{i.mobile}}</td>
 							<td>{{i.date_joined.date}}</td>
+							<td><a href="{% url 'trainedit' i.id %}"><img style="width:30px;" src="{% static 'edit.png' %}"></a></td>
 						</tr>
 						{% endfor %}
 					</tbody>

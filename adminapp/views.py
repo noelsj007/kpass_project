@@ -117,4 +117,31 @@ def SchoolEditPage(request, pk):
         if form.is_valid():
             form.save()
 
+        return redirect('superhome')
+
     return render(request, 'schoolregister.html', {'form': form})
+
+def TrainEditPage(request, pk):
+    admin_detail = Users.CustomUser.objects.get(id=pk)
+    form = UserAdminCreationForm(instance=admin_detail)
+    if request.method =='POST':
+        form = UserAdminCreationForm(request.POST, instance = admin_detail)
+        if form.is_valid():
+            form.save()
+
+        return redirect('superhome')
+
+    return render(request, 'adminedit.html', {'form': form} )
+
+def BusEditPage(request, pk):
+    admin_detail = Users.CustomUser.objects.get(id=pk)
+    form = UserAdminCreationForm(instance=admin_detail)
+    if request.method =='POST':
+        form = UserAdminCreationForm(request.POST, instance = admin_detail)
+        if form.is_valid():
+            form.save()
+
+        return redirect('superhome')
+
+    return render(request, 'adminedit.html', {'form': form} )
+

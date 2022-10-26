@@ -158,7 +158,7 @@ table td:nth-child(4) {
 							<td>{{i.school_address}}</td>
 							<td>{{i.school_phone}}</td>
 							<td>{{i.is_verified}}</td>
-							<td><a href="{% url 'schooledit' school_details_pk %}">click</a></td>
+							<td><a href="{% url 'schooledit' i.id %}"><img style="width:30px;" src="{% static 'edit.png' %}"></a></td>
 						</tr>
 						{% endfor %}
 					</tbody>
