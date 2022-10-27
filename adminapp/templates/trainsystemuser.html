@@ -155,7 +155,8 @@ table td:nth-child(4) {
 							<td>{{i.email}}</td>
 							<td>{{i.mobile}}</td>
 							<td>{{i.date_joined.date}}</td>
-							<td><a href="{% url 'trainedit' i.id %}"><img style="width:30px;" src="{% static 'edit.png' %}"></a></td>
+							<td><a href="{% url 'trainedit' i.id %}"><img style="width:30px;" src="{% static 'edit.png' %}"></a>
+								<a href="{% url 'deletetrain' i.id %}"><img style="width:30px;" src="{% static 'delete.png' %}"></a></td>
 						</tr>
 						{% endfor %}
 					</tbody>

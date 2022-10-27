@@ -48,7 +48,7 @@ class CustomUser(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     forget_password = models.CharField(max_length=255, blank= True, null=True)
-    school_name = models.ForeignKey(admindb.SchoolDetail, null=True, on_delete=models.CASCADE, related_name="student_school")
+    school_name = models.ForeignKey(admindb.SchoolDetail, null=True, blank=True, on_delete=models.CASCADE, related_name="student_school")
 
     USERNAME_FIELD = 'email'
 

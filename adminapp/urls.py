@@ -12,4 +12,7 @@ urlpatterns = [
     path('schooledit/<str:pk>/', views.SchoolEditPage, name='schooledit'),
     path('trainedit/<str:pk>/', views.TrainEditPage, name='trainedit'),
     path('busedit/<str:pk>/', views.BusEditPage, name='busedit'),
+    path('deletebus/<str:pk>/', views.DeleteBusAdmin, name='deletebus'),
+    path('deletetrain/<str:pk>/', views.DeleteTrainAdmin, name='deletetrain'),
+    path('deleteschool/<str:pk>/', views.DeleteSchool, name='deleteschool'),
 ]

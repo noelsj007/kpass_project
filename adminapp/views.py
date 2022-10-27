@@ -84,17 +84,12 @@ def TrainRegisterPage(request):
         form = UserAdminCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('first_name')
 
 
             group = Group.objects.get(name='TrainAdmin') 
             user.groups.add(group)
 
-            
-
-
-            # messages.success(request, 'Account Created for ' + user + ' Please login')
-            return redirect('superhome')
+        return redirect('trainadminr')
     return render(request, 'adminregister.html', {'form': form})
 
 
@@ -145,3 +140,18 @@ def BusEditPage(request, pk):
 
     return render(request, 'adminedit.html', {'form': form} )
 
+def DeleteBusAdmin(request, pk):
+    bus_admin_detail = Users.CustomUser.objects.get(id=pk)
+    bus_admin_detail.delete()
+    return redirect('busadminr')
+
+def DeleteTrainAdmin(request, pk):
+    bus_admin_detail = Users.CustomUser.objects.get(id=pk)
+    bus_admin_detail.delete()
+    return redirect('trainadminr')
+
+def DeleteSchool(request, pk):
+    school_details = SchoolDetail.objects.get(id=pk)
+    school_details.delete()
+    return redirect('school')
+    
