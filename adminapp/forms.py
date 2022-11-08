@@ -47,6 +47,11 @@ class SchoolDetailForm(ModelForm):
 # forms for ksrtc admin
 class KstrcPlaceForms(ModelForm):
 
+    place_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place Name'}))
+    place_district = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place District'}))
+    place_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place State'}))
+
+
     class Meta:
         model = Place
         fields = '__all__'
@@ -73,6 +78,10 @@ class KsrtcPassFormField(ModelForm):
 # trian forms for super admin
 
 class IrctcPlaceForms(ModelForm):
+
+    train_place_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place Name'}))
+    train_place_district = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place District'}))
+    train_place_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Place State'}))
 
     class Meta:
         model = TrainPlace

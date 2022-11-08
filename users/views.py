@@ -27,6 +27,10 @@ def UserProfilePage(request):
 def notfoundPage(request):
     return render(request, '404.html')
 
+
+def TestPage(request):
+    return render(request, 'test.html')
+
 def logoutUser(request):
     logout(request)
     return redirect('login')

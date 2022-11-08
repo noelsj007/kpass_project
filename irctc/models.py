@@ -4,24 +4,24 @@ from adminapp import models as admindb
 
 
 class TrainPlace(models.Model):
-    place_name = models.CharField(max_length=100, null=True, blank=True)
-    place_district = models.CharField(max_length=100, null=True, blank=True)
-    place_state = models.CharField(max_length=100, null=True, blank=True)
+    train_place_name = models.CharField(max_length=100, null=True, blank=True)
+    train_place_district = models.CharField(max_length=100, null=True, blank=True)
+    train_place_state = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.place_name
+        return self.train_place_name
 
 
 
 class TrainRoute(models.Model):
-    Route_name = models.CharField(max_length=100, null=True, blank = True)
-    start_place = models.ForeignKey(TrainPlace, null=True, blank=True, on_delete =models.CASCADE, related_name="start")
-    end_place = models.ForeignKey(TrainPlace, null=True, blank = True, on_delete = models.CASCADE, related_name = 'end')
-    route_places = models.ManyToManyField(TrainPlace, related_name = 'betweenplace')
+    train_route_name = models.CharField(max_length=100, null=True, blank = True)
+    train_start_place = models.ForeignKey(TrainPlace, null=True, blank=True, on_delete =models.CASCADE, related_name="start")
+    train_end_place = models.ForeignKey(TrainPlace, null=True, blank = True, on_delete = models.CASCADE, related_name = 'end')
+    train_route_places = models.ManyToManyField(TrainPlace, related_name = 'betweenplace')
 
 
     def __str__(self):
-        return self.Route_name
+        return self.train_route_name
 
 
 class TrainSubTime(models.Model):

@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from .superdecorator import *
 from users import models as Users
+from ksrtc import models as ksrtc
+from irctc import models as irctc
+from irctc import forms as trainform
 
 # Create your views here.
 
@@ -24,6 +27,7 @@ def homePage(request):
 
     return render(request, 'adminhome.html', context )
 
+#Bus
 
 @allowed_users(allowed_roles=['SuperAdmin'])
 def BusAdminPage(request):
@@ -35,25 +39,26 @@ def BusAdminPage(request):
 
     return render(request, 'bussystemuser.html', context)
 
-@allowed_users(allowed_roles=['SuperAdmin'])
-def TrainAdminPage(request):
-    train_user = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin'])
-
-
-
-    context = {'train_user': train_user}
-    return render(request, 'trainsystemuser.html', context)
 
 @allowed_users(allowed_roles=['SuperAdmin'])
-def SchoolPage(request):
-    school_details = SchoolDetail.objects.all()
-    school_details_pk = school_details[0].id
+def BusPlacePage(request):
+    bus_place_details = ksrtc.Place.objects.all()
+    bus_place_details_pk = bus_place_details[0].id
 
 
 
-    context = {'school_details': school_details, 'school_details_pk':school_details_pk}
-    return render(request, 'busschool.html', context)
+    context = {'bus_place_details': bus_place_details, 'bus_place_details_pk':bus_place_details_pk}
+    return render(request, 'busplace.html', context)
 
+@allowed_users(allowed_roles=['SuperAdmin'])
+def BusRoutePage(request):
+    bus_route_details = ksrtc.BusRoute.objects.all()
+    bus_route_details_pk = bus_route_details[0].id
+
+
+
+    context = {'bus_route_details': bus_route_details, 'bus_route_details_pk':bus_route_details_pk}
+    return render(request, 'busroute.html', context)
 
 
 @allowed_users(allowed_roles=['SuperAdmin'])
@@ -76,57 +81,29 @@ def BusRegisterPage(request):
     return render(request, 'adminregister.html', {'form': form})
 
 
-@allowed_users(allowed_roles=['SuperAdmin'])
-def TrainRegisterPage(request):
-
-    form = UserAdminCreationForm()
+def BusPlaceRegister(request):
+    form = KstrcPlaceForms()
     if request.method == 'POST':
-        form = UserAdminCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-
-
-            group = Group.objects.get(name='TrainAdmin') 
-            user.groups.add(group)
-
-        return redirect('trainadminr')
-    return render(request, 'adminregister.html', {'form': form})
-
-
-def SchoolRegisterPage(request):
-    form = SchoolDetailForm()
-    if request.method == 'POST':
-        form = SchoolDetailForm(request.POST)
+        form = KstrcPlaceForms(request.POST)
         if form.is_valid():
             form.save()
         
-        return redirect('superhome')
-    return render(request, 'schoolregister.html', {'form': form})
+        return redirect('busplace')
+    return render(request, 'busplaceregister.html', {'form': form})
 
-def SchoolEditPage(request, pk):
+def BusPlaceEditPage(request, pk):
 
-    school_details = SchoolDetail.objects.get(id=pk)
-    form = SchoolDetailForm(instance=school_details)
+    bus_place_details = ksrtc.Place.objects.get(id=pk)
+    form = KstrcPlaceForms(instance=bus_place_details)
     if request.method == 'POST':
-        form = SchoolDetailForm(request.POST, instance=school_details)
+        form = KstrcPlaceForms(request.POST, instance=bus_place_details)
         if form.is_valid():
             form.save()
 
-        return redirect('superhome')
+        return redirect('busplace')
 
-    return render(request, 'schoolregister.html', {'form': form})
+    return render(request, 'busplaceregister.html', {'form': form})
 
-def TrainEditPage(request, pk):
-    admin_detail = Users.CustomUser.objects.get(id=pk)
-    form = UserAdminCreationForm(instance=admin_detail)
-    if request.method =='POST':
-        form = UserAdminCreationForm(request.POST, instance = admin_detail)
-        if form.is_valid():
-            form.save()
-
-        return redirect('superhome')
-
-    return render(request, 'adminedit.html', {'form': form} )
 
 def BusEditPage(request, pk):
     admin_detail = Users.CustomUser.objects.get(id=pk)
@@ -145,13 +122,185 @@ def DeleteBusAdmin(request, pk):
     bus_admin_detail.delete()
     return redirect('busadminr')
 
-def DeleteTrainAdmin(request, pk):
-    bus_admin_detail = Users.CustomUser.objects.get(id=pk)
-    bus_admin_detail.delete()
-    return redirect('trainadminr')
 
 def DeleteSchool(request, pk):
     school_details = SchoolDetail.objects.get(id=pk)
     school_details.delete()
     return redirect('school')
+
+def DeleteBusPlace(request, pk):
+    school_details = ksrtc.Place.objects.get(id=pk)
+    school_details.delete()
+    return redirect('busplace')
+
+#School
+
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def SchoolPage(request):
+    school_details = SchoolDetail.objects.all()
+    school_details_pk = school_details[0].id
+
+
+
+    context = {'school_details': school_details, 'school_details_pk':school_details_pk}
+    return render(request, 'busschool.html', context)
+
+
+def SchoolEditPage(request, pk):
+
+    school_details = SchoolDetail.objects.get(id=pk)
+    form = SchoolDetailForm(instance=school_details)
+    if request.method == 'POST':
+        form = SchoolDetailForm(request.POST, instance=school_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('superhome')
+
+    return render(request, 'schoolregister.html', {'form': form})
+
+
+
+def SchoolRegisterPage(request):
+    form = SchoolDetailForm()
+    if request.method == 'POST':
+        form = SchoolDetailForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('school')
+    return render(request, 'schoolregister.html', {'form': form})
+
+
+#Train
+
+def TrainPlaceRegister(request):
+    form = IrctcPlaceForms()
+    if request.method == 'POST':
+        form = IrctcPlaceForms(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('trainplace')
+    return render(request, 'trainplaceregister.html', {'form': form})
+
+
+def TrainPlaceEditPage(request, pk):
+
+    train_place_details = irctc.TrainPlace.objects.get(id=pk)
+    form = IrctcPlaceForms(instance=train_place_details)
+    if request.method == 'POST':
+        form = IrctcPlaceForms(request.POST, instance=train_place_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('trainplace')
+
+    return render(request, 'trainplaceregister.html', {'form': form})
+
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def TrainPlacePage(request):
+    train_place_details = irctc.TrainPlace.objects.all()
+    train_place_details_pk = train_place_details[0].id
+
+
+
+    context = {'train_place_details': train_place_details, 'train_place_details_pk':train_place_details_pk}
+    return render(request, 'trainplace.html', context)
+
+def DeleteTrainPlace(request, pk):
+    school_details = irctc.TrainPlace.objects.get(id=pk)
+    school_details.delete()
+    return redirect('trainplace')
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def TrainAdminPage(request):
+    train_user = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin'])
+
+
+
+    context = {'train_user': train_user}
+    return render(request, 'trainsystemuser.html', context)
+
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def TrainRegisterPage(request):
+
+    form = UserAdminCreationForm()
+    if request.method == 'POST':
+        form = UserAdminCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+
+
+            group = Group.objects.get(name='TrainAdmin') 
+            user.groups.add(group)
+
+        return redirect('trainadminr')
+    return render(request, 'adminregister.html', {'form': form})
+
+
+def TrainEditPage(request, pk):
+    admin_detail = Users.CustomUser.objects.get(id=pk)
+    form = UserAdminCreationForm(instance=admin_detail)
+    if request.method =='POST':
+        form = UserAdminCreationForm(request.POST, instance = admin_detail)
+        if form.is_valid():
+            form.save()
+
+        return redirect('superhome')
+
+    return render(request, 'adminedit.html', {'form': form} )
+
+def DeleteTrainAdmin(request, pk):
+    bus_admin_detail = Users.CustomUser.objects.get(id=pk)
+    bus_admin_detail.delete()
+    return redirect('trainadminr')
+
+@allowed_users(allowed_roles=['SuperAdmin'])
+def TrainRoutePage(request):
+    train_route_details = irctc.TrainRoute.objects.all()
+    train_route_details_pk = train_route_details[0].id
+
+
+
+    context = {'train_route_details': train_route_details, 'train_route_details_pk':train_route_details_pk}
+    return render(request, 'trainroute.html', context)
+
+
+def TrainRouteRegister(request):
+    form = TrainRouteForm()
+    if request.method == 'POST':
+        form = TrainRouteForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('trainplace')
+    return render(request, 'trainrouteregister.html', {'form': form})
+
+
+def TrainRouteEditPage(request, pk):
+
+    train_place_details = irctc.TrainRoute.objects.get(id=pk)
+    form = TrainRouteForm(instance=train_place_details)
+    if request.method == 'POST':
+        form = TrainRouteForm(request.POST, instance=train_place_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('trainroute')
+
+    return render(request, 'trainrouteregister.html', {'form': form})
+
+
+def DeleteTrainRoute(request, pk):
+    school_details = irctc.TrainPlace.objects.get(id=pk)
+    school_details.delete()
+    return redirect('school')
+
+
+
+
     

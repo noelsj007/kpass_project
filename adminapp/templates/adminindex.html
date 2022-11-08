@@ -20,6 +20,10 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'staticadmin/css/sb-admin-2.min.css' %}" rel="stylesheet">
 
+
+    <!-- Custom styles for this page -->
+    <link href="{% static 'staticadmin/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -104,18 +108,17 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+                    <span>Places</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <h6 class="collapse-header">Train:</h6>
+                        <a class="collapse-item" href="{% url 'trainplace' %}">Train Places</a>
+                        <a class="collapse-item" href="{% url 'trainroute' %}">Train Routes</a>
                         <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <h6 class="collapse-header">Bus:</h6>
+                        <a class="collapse-item" href="{% url 'busplace' %}">Bus Places</a>
+                        <a class="collapse-item" href="register.html">Bus Routes</a>
                     </div>
                 </div>
             </li>

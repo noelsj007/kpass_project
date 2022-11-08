@@ -9,5 +9,7 @@ urlpatterns = [
     path('register/', views.registerPage, name='register'),
     path('dashboard/', views.dashPage, name='dash'),
     path('notfound/', views.notfoundPage, name='notfound'),
-    path('profile/', views.UserProfilePage, name='profile')
+    path('profile/', views.UserProfilePage, name='profile'),
+    path('test/', views.TestPage, name='test')
+
 ]
