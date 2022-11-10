@@ -133,6 +133,43 @@ def DeleteBusPlace(request, pk):
     school_details.delete()
     return redirect('busplace')
 
+def BusSubTimes(request):
+    bus_sub_time = ksrtc.SubTime.objects.all()
+    bus_sub_time_pk = bus_sub_time[0].id
+
+
+
+    context = {'bus_sub_time': bus_sub_time, 'bus_sub_time_pk':bus_sub_time_pk}
+    return render(request, 'bustime.html', context)
+
+def BusTimeRegister(request):
+    form = KsrtcSubTimeForm()
+    if request.method == 'POST':
+        form = KsrtcSubTimeForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('bustime')
+    return render(request, 'traintimeregister.html', {'form': form})
+
+def BusTimeEditPage(request, pk):
+
+    bus_time_details = ksrtc.SubTime.objects.get(id=pk)
+    form = KsrtcSubTimeForm(instance=bus_time_details)
+    if request.method == 'POST':
+        form = KsrtcSubTimeForm(request.POST, instance=bus_time_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('bustime')
+
+    return render(request, 'bustimeregister.html', {'form': form})
+
+def DeleteBusTime(request, pk):
+    school_details = ksrtc.SubTime.objects.get(id=pk)
+    school_details.delete()
+    return redirect('bustime')
+
 #School
 
 
@@ -270,6 +307,16 @@ def TrainRoutePage(request):
     return render(request, 'trainroute.html', context)
 
 
+def TrainSubTimes(request):
+    train_sub_time = irctc.TrainSubTime.objects.all()
+    train_sub_time_pk = train_sub_time[0].id
+
+
+
+    context = {'train_sub_time': train_sub_time, 'train_sub_time_pk':train_sub_time_pk}
+    return render(request, 'traintime.html', context)
+
+
 def TrainRouteRegister(request):
     form = TrainRouteForm()
     if request.method == 'POST':
@@ -280,6 +327,28 @@ def TrainRouteRegister(request):
         return redirect('trainplace')
     return render(request, 'trainrouteregister.html', {'form': form})
 
+def TrainTimeRegister(request):
+    form = IrctcSubTimeForm()
+    if request.method == 'POST':
+        form = IrctcSubTimeForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        return redirect('traintime')
+    return render(request, 'traintimeregister.html', {'form': form})
+
+def TrainTimeEditPage(request, pk):
+
+    train_time_details = irctc.TrainSubTime.objects.get(id=pk)
+    form = IrctcSubTimeForm(instance=train_time_details)
+    if request.method == 'POST':
+        form = IrctcSubTimeForm(request.POST, instance=train_time_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('traintime')
+
+    return render(request, 'traintimeregister.html', {'form': form})
 
 def TrainRouteEditPage(request, pk):
 
@@ -298,8 +367,12 @@ def TrainRouteEditPage(request, pk):
 def DeleteTrainRoute(request, pk):
     school_details = irctc.TrainPlace.objects.get(id=pk)
     school_details.delete()
-    return redirect('school')
+    return redirect('trainroute')
 
+def DeleteTrainTime(request, pk):
+    school_details = irctc.TrainRoute.objects.get(id=pk)
+    school_details.delete()
+    return redirect('traintime')
 
 
 

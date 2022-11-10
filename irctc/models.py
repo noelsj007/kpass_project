@@ -26,6 +26,10 @@ class TrainRoute(models.Model):
 
 class TrainSubTime(models.Model):
     sub_time = models.IntegerField(null=True)
+    sub_name = models.CharField(max_length=100, null=True)
+    
+    def __str__(self):
+        return self.sub_name
 
 
 
