@@ -44,9 +44,9 @@ class TrainStudentPassForm(models.Model):
     address = models.TextField(max_length=100, blank=True, null=True)
     adhaar_no = models.CharField(max_length=200, null=True, blank=True)
     mobile = models.CharField(max_length=200, blank=True, default=None)
-    adhaar_image = models.ImageField(upload_to='static/irctcimage/adhaar', null=True, default=None)
-    profileimage = models.ImageField(upload_to='static/irctcimage/profileimage', null=True, default=None)
-    idimage = models.ImageField(upload_to='static/irctcimage/idimage', null=True, default=None)
+    adhaar_image = models.ImageField(upload_to='users/static/irctcimage/adhaar', null=True, default=None)
+    profileimage = models.ImageField(upload_to='users/static/irctcimage/profileimage', null=True, default=None)
+    idimage = models.ImageField(upload_to='users/static/irctcimage/idimage', null=True, default=None)
 
 class TrainPassForm(models.Model):
     name= models.CharField(max_length=100, default=None)
@@ -57,6 +57,6 @@ class TrainPassForm(models.Model):
     address = models.TextField(max_length=100, blank=True, null=True)
     adhaar_no = models.CharField(max_length=200, null=True, blank=True)
     mobile = models.CharField(max_length=200, blank=True, default=None)
-    adhaar_image = models.ImageField(upload_to='static/irctcimage/adhaar', null=True, default=None)
-    profileimage = models.ImageField(upload_to='static/irctcimage/profileimage', null=True, default=None)
+    adhaar_image = models.ImageField(upload_to='users/static/irctcimage/adhaar', null=True, default=None)
+    profileimage = models.ImageField(upload_to='users/static/irctcimage/profileimage', null=True, default=None)
 

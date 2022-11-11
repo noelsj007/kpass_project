@@ -138,14 +138,19 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'tpass' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Train Pass</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tspass' %}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Train Student Pass</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'bpass' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Bus Pass</span></a>
             </li>

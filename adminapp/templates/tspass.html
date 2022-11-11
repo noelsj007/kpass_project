@@ -1,0 +1,179 @@
+{% extends './adminindex.html' %}
+{% block content %}
+{% load static %}
+<html>
+<head>
+<style>
+
+
+table {
+	--accent-color: #362f4b;
+	--text-color: slategray;
+	--bgColorDarker: #ececec;
+	--bgColorLighter: #fcfcfc;
+	--insideBorderColor: lightgray;
+	width: 100%;
+	margin-left: 0px ;
+	padding: 50px;
+	border: 1px solid var(--accent-color);
+	border-collapse: collapse;
+	color: var(--text-color);
+	table-layout: fixed;
+}
+
+table caption {
+	margin: 1rem 0;
+	color: slategray;
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: 0.055rem;
+	text-align: center;
+}
+
+table thead tr {
+	color: whitesmoke;
+	background-color: var(--accent-color);
+	font-size: 1rem;
+}
+
+table tbody tr {
+	border: 1px solid var(--insideBorderColor);
+	background-color: var(--bgColorDarker);
+}
+
+table tbody tr:nth-child(odd) {
+	background-color: var(--bgColorLighter);
+}
+
+table th {
+	letter-spacing: 0.075rem;
+}
+
+table th,
+table td {
+	padding: 0.75rem 1rem;
+	font-weight: normal;
+	text-align: left;
+}
+
+table th:nth-child(4),
+table td:nth-child(4) {
+	text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+	table {
+		border: none;
+	}
+
+	table caption {
+		padding: 0.75rem 1rem;
+		border-radius: 6px 6px 0 0;
+		color: whitesmoke;
+		font-size: 1.35rem;
+		background-color: var(--accent-color);
+	}
+
+	table thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		clip: rect(0 0 0 0);
+		overflow: hidden;
+	}
+
+	table tbody tr {
+		margin-bottom: 2rem;
+		display: block;
+	}
+
+	table td {
+		font-size: 0.875rem;
+		text-align: right;
+		display: block;
+	}
+
+	table td:before {
+		content: attr(data-label);
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.075rem;
+		text-transform: uppercase;
+		float: left;
+		opacity: 0.5;
+	}
+
+	table td:not(:last-child) {
+		border-bottom: 1px solid var(--insideBorderColor);
+	}
+}
+
+</style>
+</head>
+<body>
+	<div class="container-fluid">
+
+		<!-- Page Heading -->
+		<div class="d-sm-flex align-items-center justify-content-between mb-4">
+			<h1 class="h3 mb-0 text-gray-800">Train Pass Details</h1>
+			
+		</div>
+	<br>
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Train Pass Details</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Time</th>
+                            <th>From</th>
+                            <th>To</th>
+							<th>Age</th>
+                            <th>Address</th>
+                            <th>Adhaar</th>
+                            <th>Mobile</th>
+                            <th>Action</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Name</th>
+							<th>Time</th>
+                            <th>From</th>
+                            <th>To</th>
+							<th>Age</th>
+                            <th>Address</th>
+                            <th>Adhaar</th>
+                            <th>Mobile</th>
+                            <th>Action</th>
+						</tr>
+					</tfoot>
+					<tbody>
+						{% for i in tspass_details %}
+						<tr>
+							<td>{{i.name}}</td>
+							<td>{{i.time_periode}}</td>
+                            <td>{{i.start_place}}</td>
+                            <td>{{i.end_place}}</td>
+                            <td>{{i.age}}</td>
+                            <td>{{i.address}}</td>
+                            <td>{{i.adhaar_no}}</td>
+                            <td>{{i.mobile}}</td>
+
+							<td><a href="{% url 'tspassedit' i.id %}"><img style="width:30px;" src="{% static 'edit.png' %}"></a>
+								<a href="{% url 'deletetspass' i.id %}"><img style="width:30px;" src="{% static 'delete.png' %}"></a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+{% endblock %}

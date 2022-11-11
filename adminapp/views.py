@@ -170,6 +170,8 @@ def DeleteBusTime(request, pk):
     school_details.delete()
     return redirect('bustime')
 
+    
+
 #School
 
 
@@ -376,4 +378,86 @@ def DeleteTrainTime(request, pk):
 
 
 
-    
+# Train pass forms
+def TSPassPage(request):
+    tspass_details = irctc.TrainStudentPassForm.objects.all()
+
+
+
+    context = {'tspass_details': tspass_details}
+    return render(request, 'tspass.html', context)
+
+
+def TSPassEditPage(request, pk):
+
+    school_details = irctc.TrainStudentPassForm.objects.get(id=pk)
+    form = IrctcStudentPassFormField(instance=school_details)
+    if request.method == 'POST':
+        form = IrctcStudentPassFormField(request.POST, instance=school_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('tspass')
+
+    return render(request, 'tspassregister.html', {'form': form})
+
+def DeleteTSPass(request, pk):
+    tspass_details = irctc.TrainStudentPassForm.objects.get(id=pk)
+    tspass_details.delete()
+    return redirect('tspass')
+
+def TPassPage(request):
+    tpass_details = irctc.TrainPassForm.objects.all()
+
+
+
+    context = {'tpass_details': tpass_details}
+    return render(request, 'tpass.html', context)
+
+
+def TPassEditPage(request, pk):
+
+    school_details = irctc.TrainPassForm.objects.get(id=pk)
+    form = IrctcPassFormField(instance=school_details)
+    if request.method == 'POST':
+        form = IrctcPassFormField(request.POST, instance=school_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('tpass')
+
+    return render(request, 'tpassregister.html', {'form': form})
+
+def DeleteTPass(request, pk):
+    tpass_details = irctc.TrainPassForm.objects.get(id=pk)
+    tpass_details.delete()
+    return redirect('tpass')
+
+#Bus pass form
+
+def BPassPage(request):
+    bpass_details = ksrtc.PassForm.objects.all()
+
+
+
+    context = {'bpass_details': bpass_details}
+    return render(request, 'bpass.html', context)
+
+
+def BPassEditPage(request, pk):
+
+    bpass_details = ksrtc.PassForm.objects.get(id=pk)
+    form = KsrtcPassFormField(instance=bpass_details)
+    if request.method == 'POST':
+        form = KsrtcPassFormField(request.POST, instance=bpass_details)
+        if form.is_valid():
+            form.save()
+
+        return redirect('tpass')
+
+    return render(request, 'bpassregister.html', {'form': form})
+
+def DeleteBPass(request, pk):
+    bpass_details = ksrtc.PassForm.objects.get(id=pk)
+    bpass_details.delete()
+    return redirect('tpass')
