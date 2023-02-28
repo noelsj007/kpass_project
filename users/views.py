@@ -82,3 +82,10 @@ def registerPage(request):
             messages.success(request, 'Account Created for ' + str(user) + ' Please login')
             return redirect('login')
     return render(request, 'userregister.html', {'form': form})
+
+
+def BusPassForm(request):
+    return render(request, 'buspassform.html')
+
+def TrainPassForm(request):
+    return render(request, 'teainpassform.html')
