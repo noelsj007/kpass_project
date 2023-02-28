@@ -88,4 +88,4 @@ def BusPassForm(request):
     return render(request, 'buspassform.html')
 
 def TrainPassForm(request):
-    return render(request, 'teainpassform.html')
+    return render(request, 'trainpassform.html')
