@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from .models import *
 from irctc.models import *
 from ksrtc.models import *
+from django.forms.widgets import NumberInput
 
 
 class UserAdminCreationForm(UserCreationForm):
@@ -42,5 +43,7 @@ class IrctcPassFormField(ModelForm):
 #bus pass forms
 
 class KsrtcPassFormField(ModelForm):
-    model = PassForm()
-    fields = ['bus_name', 'bus_time_periode', 'bus_school_name', 'bus_start_place','bus_end_place', 'bus_age', 'bus_address', 'bus_adhaar_no', 'bus_mobile','bus_idimage','bus_adhaarimage', 'bus_profileimage']
+    dob = forms.DateTimeField(label="Date", required=True, widget=NumberInput(attrs={'type':'date'}))
+    class Meta:
+        model = PassForm
+        fields = '__all__'

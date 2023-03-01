@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserAdminCreationForm
+from .forms import UserAdminCreationForm, KsrtcPassFormField
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -85,7 +85,12 @@ def registerPage(request):
 
 
 def BusPassForm(request):
-    return render(request, 'buspassform.html')
+    form = KsrtcPassFormField()
+    if request.method=='POST':
+        form = KsrtcPassFormField(request.POST)
+        if form.is_valid():
+            form.save()
+    return render(request, 'buspassform.html', {'form':form})
 
 def TrainPassForm(request):
     return render(request, 'trainpassform.html')

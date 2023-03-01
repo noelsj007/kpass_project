@@ -1,5 +1,6 @@
 from django.db import models
 from adminapp import models as admindb
+import datetime
 # Create your models here.
 
 class Place(models.Model):
@@ -40,6 +41,7 @@ class PassForm(models.Model):
     start_place = models.ForeignKey(Place, null=True, blank=True, on_delete =models.CASCADE, related_name="pass_start")
     end_place = models.ForeignKey(Place, null=True, blank = True, on_delete = models.CASCADE, related_name = 'pass_end')
     age = models.IntegerField(blank=True, null=True, default=True)
+    dob = models.DateField(default=datetime.date.today)
     address = models.TextField(max_length=100, blank=True, null=True)
     adhaar_no = models.CharField(max_length=200, null=True, blank=True)
     mobile = models.CharField(max_length=200, blank=True, default=None)
