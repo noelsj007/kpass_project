@@ -37,17 +37,17 @@
                                     <h2 class="steps">Step 1 - 4</h2>
                                 </div>
                             </div> <label class="fieldlabels">Name: *</label> 
-                            <input type="text" name="name" placeholder="Full Name" /> 
+                            {{form.name}} 
                             <label class="fieldlabels">Age: *</label>
-                            <input type="number" name="age" placeholder="Age" /> 
+                            {{form.age}}
                             <label class="fieldlabels">DOB: *</label>
-                            <input type="date" name="dob" placeholder="Date Of Birth" /> 
+                            {{form.dob}} 
                             <label class="fieldlabels">Mobile: *</label>
-                            <input type="number" name="mobile" placeholder="Mobile Number" />
+                            {{form.mobile}}
                             <label class="fieldlabels">Adhaar No: *</label>
-                            <input type="number" name="adhaar_no" placeholder="Adhaar Number" />
+                            {{form.adhaar_no}}
                             <label class="fieldlabels">Address: *</label>
-                            <input type="textarea" name="address" placeholder="Address" />
+                            {{form.address}}
                         </div> <input type="button" name="next" class="next action-button" value="Next" />
                     </fieldset>
                     <fieldset>
@@ -61,29 +61,13 @@
                                 </div>
                             </div> 
                             <label class="fieldlabels">School Name: *</label> 
-                            <select class="form-control" id="users_multiselect" name="school_name" required>
-                                {% for i in school %}
-                                  <option value="{{i.id}}">{{i.school_name}}</option>
-                                {% endfor %}
-                              </select> 
+                            {{form.school_name}}
                             <label class="fieldlabels">Starting Place: *</label> 
-                            <select class="form-control" id="users_multiselect" name="start_place" required>
-                                {% for i in place %}
-                                  <option value="{{i.id}}">{{i.place_name}}</option>
-                                {% endfor %}
-                              </select>
+                            {{form.start_place}}
                               <label class="fieldlabels">Destination: *</label> 
-                              <select class="form-control" id="users_multiselect" name="end_place" required>
-                                  {% for i in place %}
-                                    <option value="{{i.id}}">{{i.place_name}}</option>
-                                  {% endfor %}
-                                </select>
-                            <label class="fieldlabels">Time Period: *</label> 
-                            <select class="form-control" id="users_multiselect" name="time_periode" required>
-                                {% for i in subtime %}
-                                  <option value="{{i.id}}">{{i.sub_name}}</option>
-                                {% endfor %}
-                              </select> 
+                              {{form.end_place}}
+                            <label class="fieldlabels">Time Period: *</label>
+                            {{form.time_periode}}
                               </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                     </fieldset>
                     <fieldset>
@@ -96,11 +80,11 @@
                                     <h2 class="steps">Step 3 - 4</h2>
                                 </div>
                             </div> <label class="fieldlabels">Upload Your Photo:</label> 
-                            <input type="file" name="profileimage" accept="image/*"> 
+                            {{form.profileimage}}
                             <label class="fieldlabels">Upload ID Photo:</label> 
-                            <input type="file" name="idimage" accept="image/*"> 
+                            {{form.idimage}}
                             <label class="fieldlabels">Upload Adhaar Photo:</label> 
-                            <input type="file" name="adhaar_image" accept="image/*">
+                            {{form.adhaar_image}}
                         </div> <input type="submit" name="submit" class="submit action-button" value="Submit"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                     </fieldset>
                     <fieldset>

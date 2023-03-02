@@ -86,37 +86,50 @@ def registerPage(request):
 
 
 
-def BusPassForm(request):
-    school = admindb.SchoolDetail.objects.all()
-    place = Place.objects.all()
-    subtime = SubTime.objects.all()
-    if request.method == 'POST':
-        name = request.POST.get("name")
-        age = request.POST.get("age")
-        dob = request.POST.get("dob")
-        mobile = request.POST.get("mobile")
-        adhaar_no = request.POST.get("adhaar_no")
-        address = request.POST.get("address")
-        school_name = request.POST.get("school_name")
-        start_place = request.POST.get("start_place")
-        end_place = request.POST.get("end_place")
-        time_periode = request.POST.get("time_periode")
-        profileimage = request.FILES.get("profileimage")
-        idimage = request.FILES.get("idimage")
-        adhaar_image = request.FILES.get("adhaar_image")
-        try:
-            buspassform = PassForm(name=name, age=age, dob=dob, mobile=mobile, adhaar_no=adhaar_no, address=address, school_name=school_name, start_place=start_place, end_place=end_place, time_periode=time_periode, profileimage=profileimage, idimage=idimage, adhaar_image=adhaar_image)
-            buspassform.save()
-            messages.success(request, 'application submitted')
-            return redirect('dash')
-        except:
-            messages.error(request, 'Error in submitting your appliction')
-            return redirect('buspassform')
-        print(form.error)
+# def BusPassForm(request):
+#     school = admindb.SchoolDetail.objects.all()
+#     place = Place.objects.all()
+#     subtime = SubTime.objects.all()
+#     if request.method == 'POST':
+#         name = request.POST.get("name")
+#         age = request.POST.get("age")
+#         dob = request.POST.get("dob")
+#         mobile = request.POST.get("mobile")
+#         adhaar_no = request.POST.get("adhaar_no")
+#         address = request.POST.get("address")
+#         school_name = request.POST.get("school_name")
+#         start_place = request.POST.get("start_place")
+#         end_place = request.POST.get("end_place")
+#         time_periode = request.POST.get("time_periode")
+#         profileimage = request.FILES.get("profileimage")
+#         idimage = request.FILES.get("idimage")
+#         adhaar_image = request.FILES.get("adhaar_image")
+#         try:
+#             buspassform = PassForm(name=name, age=age, dob=dob, mobile=mobile, adhaar_no=adhaar_no, address=address, school_name=school_name, start_place=start_place, end_place=end_place, time_periode=time_periode, profileimage=profileimage, idimage=idimage, adhaar_image=adhaar_image)
+#             buspassform.save()
+#             messages.success(request, 'application submitted')
+#             return redirect('dash')
+#         except:
+#             messages.error(request, 'Error in submitting your appliction')
+#             return redirect('buspassform')
+#         print(form.error)
 
         
-    return render(request, 'buspassform.html', {'school':school, 'place':place, 'subtime':subtime})
+#     return render(request, 'buspassform.html', {'school':school, 'place':place, 'subtime':subtime})
 
+def BusPassForm(request):
+    form = KsrtcPassFormField()
+    if request.method == 'POST':
+        form = KsrtcPassFormField(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'application submitted')
+            return redirect('dash')
+
+        else:
+            messages.error(request, 'Error in submitting your appliction')
+            return redirect('buspassform')
+    return render(request, 'buspassform.html', {'form':form})
 
 def TrainPassForm(request):
     form = IrctcPassFormField()
