@@ -9,3 +9,5 @@ from django.contrib.auth.decorators import login_required
 @allowed_users(allowed_roles=['TrainAdmin'])
 def homePage(request):
     return render(request, 'trainhome.html')
+
+    

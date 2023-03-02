@@ -57,6 +57,6 @@ class TrainPassForm(models.Model):
     address = models.TextField(max_length=100, blank=True, null=True)
     adhaar_no = models.CharField(max_length=200, null=True, blank=True)
     mobile = models.CharField(max_length=200, blank=True, default=None)
-    adhaar_image = models.ImageField(upload_to='users/static/irctcimage/adhaar', null=True, default=None)
-    profileimage = models.ImageField(upload_to='users/static/irctcimage/profileimage', null=True, default=None)
+    adhaar_image = models.ImageField(upload_to='irctcimage/adhaar', null=True, default=None)
+    profileimage = models.ImageField(upload_to='irctcimage/profileimage', null=True, default=None)
 

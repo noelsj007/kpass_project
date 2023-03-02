@@ -15,7 +15,7 @@
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
                 <h2 id="heading">Fill Bus Pass Application</h2>
                 <p>Fill all form field to go to next step</p>
-                <form id="msform" action="#", method="post">
+                <form id="msform" enctype="multipart/form-data" method="post">
                     {% csrf_token %}
                     <!-- progressbar -->
                     <ul id="progressbar">

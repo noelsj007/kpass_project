@@ -39,13 +39,15 @@ class IrctcStudentPassFormField(ModelForm):
         fields = '__all__'
     
 class IrctcPassFormField(ModelForm):
+    adhaar_image =  forms.FileField(widget=forms.ClearableFileInput)
+    profileimage =  forms.FileField(widget=forms.ClearableFileInput)
     class Meta:
         model = TrainPassForm
         fields = '__all__'
     
 #bus pass forms
 
-class KsrtcPassFormField(ModelForm):
+class KsrtcPassFormField(forms.ModelForm):
     # dob = forms.DateTimeField(label="Date", required=True, widget=NumberInput(attrs={'type':'date'}))
     # name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}))
     # age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}))

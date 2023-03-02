@@ -101,9 +101,9 @@ def BusPassForm(request):
         start_place = request.POST.get("start_place")
         end_place = request.POST.get("end_place")
         time_periode = request.POST.get("time_periode")
-        profileimage = request.POST.get("profileimage")
-        idimage = request.POST.get("idimage")
-        adhaar_image = request.POST.get("adhaar_image")
+        profileimage = request.FILES.get("profileimage")
+        idimage = request.FILES.get("idimage")
+        adhaar_image = request.FILES.get("adhaar_image")
         try:
             buspassform = PassForm(name=name, age=age, dob=dob, mobile=mobile, adhaar_no=adhaar_no, address=address, school_name=school_name, start_place=start_place, end_place=end_place, time_periode=time_periode, profileimage=profileimage, idimage=idimage, adhaar_image=adhaar_image)
             buspassform.save()
@@ -121,7 +121,7 @@ def BusPassForm(request):
 def TrainPassForm(request):
     form = IrctcPassFormField()
     if request.method == 'POST':
-        form = IrctcPassFormField(request.POST)
+        form = IrctcPassFormField(request.POST, request.FILES)
         if form.is_valid():
             form.save()
     return render(request, 'trainpassform.html', {'form':form})

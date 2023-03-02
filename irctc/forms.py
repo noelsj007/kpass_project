@@ -18,5 +18,6 @@ class IrctcStudentPassFormField(ModelForm):
     fields = ['name', 'time_periode', 'school_name', 'start_place','end_place', 'age', 'address', 'adhaar_no', 'mobile','idimage','adhaarimage', 'profileimage']
 
 class IrctcPassFormField(ModelForm):
-    model = TrainPassForm()
-    fields = ['name', 'time_periode', 'school_name', 'start_place','end_place', 'age', 'address', 'adhaar_no', 'mobile','adhaarimage', 'profileimage']
+   class Meta:
+        model = TrainPassForm
+        fields = '__all__'
