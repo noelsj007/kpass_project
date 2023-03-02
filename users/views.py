@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserAdminCreationForm, KsrtcPassFormField
+from .forms import UserAdminCreationForm, KsrtcPassFormField, IrctcPassFormField
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from .decorator import *
 from .models import *
+from ksrtc.models import *
 
 # Create your views here.
 
@@ -15,7 +16,7 @@ def homePage(request):
     return render(request, 'home.html')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['customer'])
+# @allowed_users(allowed_roles=['customer', 'superadmin', 'admin'])
 
 def dashPage(request):
     return render(request, 'userdashboard.html')
@@ -84,13 +85,43 @@ def registerPage(request):
     return render(request, 'userregister.html', {'form': form})
 
 
+
 def BusPassForm(request):
-    form = KsrtcPassFormField()
-    if request.method=='POST':
-        form = KsrtcPassFormField(request.POST)
-        if form.is_valid():
-            form.save()
-    return render(request, 'buspassform.html', {'form':form})
+    school = admindb.SchoolDetail.objects.all()
+    place = Place.objects.all()
+    subtime = SubTime.objects.all()
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        age = request.POST.get("age")
+        dob = request.POST.get("dob")
+        mobile = request.POST.get("mobile")
+        adhaar_no = request.POST.get("adhaar_no")
+        address = request.POST.get("address")
+        school_name = request.POST.get("school_name")
+        start_place = request.POST.get("start_place")
+        end_place = request.POST.get("end_place")
+        time_periode = request.POST.get("time_periode")
+        profileimage = request.POST.get("profileimage")
+        idimage = request.POST.get("idimage")
+        adhaar_image = request.POST.get("adhaar_image")
+        try:
+            buspassform = PassForm(name=name, age=age, dob=dob, mobile=mobile, adhaar_no=adhaar_no, address=address, school_name=school_name, start_place=start_place, end_place=end_place, time_periode=time_periode, profileimage=profileimage, idimage=idimage, adhaar_image=adhaar_image)
+            buspassform.save()
+            messages.success(request, 'application submitted')
+            return redirect('dash')
+        except:
+            messages.error(request, 'Error in submitting your appliction')
+            return redirect('buspassform')
+        print(form.error)
+
+        
+    return render(request, 'buspassform.html', {'school':school, 'place':place, 'subtime':subtime})
+
 
 def TrainPassForm(request):
-    return render(request, 'trainpassform.html')
+    form = IrctcPassFormField()
+    if request.method == 'POST':
+        form = IrctcPassFormField(request.POST)
+        if form.is_valid():
+            form.save()
+    return render(request, 'trainpassform.html', {'form':form})

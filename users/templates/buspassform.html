@@ -1,5 +1,3 @@
-{% extends  './dashindex.html' %}
-{% block content %}
 {% load static %}
 <html lang="en" >
 <head>
@@ -17,7 +15,8 @@
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
                 <h2 id="heading">Fill Bus Pass Application</h2>
                 <p>Fill all form field to go to next step</p>
-                <form id="msform">
+                <form id="msform" action="#", method="post">
+                    {% csrf_token %}
                     <!-- progressbar -->
                     <ul id="progressbar">
                         <li class="active" id="account"><strong>Account</strong></li>
@@ -37,7 +36,18 @@
                                 <div class="col-5">
                                     <h2 class="steps">Step 1 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Full Name: *</label> {{form.name}} <label class="fieldlabels">Age: *</label> {{form.age}} <label class="fieldlabels">DOB: *</label> {{form.dob}} <label class="fieldlabels">Adhaar No: *</label> {{form.adhaar_no}} <label class="fieldlabels">Mobile: *</label> {{form.mobile}}<label class="fieldlabels">Adress: *</label> {{form.address}}
+                            </div> <label class="fieldlabels">Name: *</label> 
+                            <input type="text" name="name" placeholder="Full Name" /> 
+                            <label class="fieldlabels">Age: *</label>
+                            <input type="number" name="age" placeholder="Age" /> 
+                            <label class="fieldlabels">DOB: *</label>
+                            <input type="date" name="dob" placeholder="Date Of Birth" /> 
+                            <label class="fieldlabels">Mobile: *</label>
+                            <input type="number" name="mobile" placeholder="Mobile Number" />
+                            <label class="fieldlabels">Adhaar No: *</label>
+                            <input type="number" name="adhaar_no" placeholder="Adhaar Number" />
+                            <label class="fieldlabels">Address: *</label>
+                            <input type="textarea" name="address" placeholder="Address" />
                         </div> <input type="button" name="next" class="next action-button" value="Next" />
                     </fieldset>
                     <fieldset>
@@ -49,8 +59,32 @@
                                 <div class="col-5">
                                     <h2 class="steps">Step 2 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Full Name: *</label> {{form.name}} <label class="fieldlabels">Last Name: *</label> <input type="text" name="lname" placeholder="Last Name" /> <label class="fieldlabels">Contact No.: *</label> <input type="text" name="phno" placeholder="Contact No." /> <label class="fieldlabels">Alternate Contact No.: *</label> <input type="text" name="phno_2" placeholder="Alternate Contact No." />
-                        </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </div> 
+                            <label class="fieldlabels">School Name: *</label> 
+                            <select class="form-control" id="users_multiselect" name="school_name" required>
+                                {% for i in school %}
+                                  <option value="{{i.id}}">{{i.school_name}}</option>
+                                {% endfor %}
+                              </select> 
+                            <label class="fieldlabels">Starting Place: *</label> 
+                            <select class="form-control" id="users_multiselect" name="start_place" required>
+                                {% for i in place %}
+                                  <option value="{{i.id}}">{{i.place_name}}</option>
+                                {% endfor %}
+                              </select>
+                              <label class="fieldlabels">Destination: *</label> 
+                              <select class="form-control" id="users_multiselect" name="end_place" required>
+                                  {% for i in place %}
+                                    <option value="{{i.id}}">{{i.place_name}}</option>
+                                  {% endfor %}
+                                </select>
+                            <label class="fieldlabels">Time Period: *</label> 
+                            <select class="form-control" id="users_multiselect" name="time_periode" required>
+                                {% for i in subtime %}
+                                  <option value="{{i.id}}">{{i.sub_name}}</option>
+                                {% endfor %}
+                              </select> 
+                              </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                     </fieldset>
                     <fieldset>
                         <div class="form-card">
@@ -61,10 +95,16 @@
                                 <div class="col-5">
                                     <h2 class="steps">Step 3 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Upload Your Photo:</label> <input type="file" name="pic" accept="image/*"> <label class="fieldlabels">Upload Signature Photo:</label> <input type="file" name="pic" accept="image/*">
-                        </div> <input type="button" name="next" class="next action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </div> <label class="fieldlabels">Upload Your Photo:</label> 
+                            <input type="file" name="profileimage" accept="image/*"> 
+                            <label class="fieldlabels">Upload ID Photo:</label> 
+                            <input type="file" name="idimage" accept="image/*"> 
+                            <label class="fieldlabels">Upload Adhaar Photo:</label> 
+                            <input type="file" name="adhaar_image" accept="image/*">
+                        </div> <input type="submit" name="submit" class="submit action-button" value="Submit"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                     </fieldset>
                     <fieldset>
+                        <div class="form-card">
                         <div class="form-card">
                             <div class="row">
                                 <div class="col-7">
@@ -85,6 +125,13 @@
                             </div>
                         </div>
                     </fieldset>
+                    {% for message in messages %}
+            <p style='background-color: grey;
+            color: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            margin: bottom 10px;'>{{message}}</p><br>
+        {% endfor %}
                 </form>
             </div>
         </div>
@@ -95,4 +142,3 @@
 
 </body>
 </html>
-{% endblock %}
