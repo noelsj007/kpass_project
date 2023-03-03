@@ -36,7 +36,9 @@
                                 <div class="col-5">
                                     <h2 class="steps">Step 1 - 4</h2>
                                 </div>
-                            </div> <label class="fieldlabels">Name: *</label> 
+                            </div> 
+                            <label class="fieldlabels">Name: *</label> 
+                            {{form.user.as_hidden}}
                             {{form.name}} 
                             <label class="fieldlabels">Age: *</label>
                             {{form.age}}

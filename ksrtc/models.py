@@ -1,6 +1,8 @@
 from django.db import models
 from adminapp import models as admindb
 import datetime
+from django.contrib.auth import get_user_model
+from django.conf import settings
 # Create your models here.
 
 class Place(models.Model):
@@ -35,6 +37,7 @@ class SubTime(models.Model):
 
 class PassForm(models.Model):
 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name= models.CharField(max_length=100, default=None)
     time_periode = models.ForeignKey(SubTime, on_delete = models.CASCADE, default=True)
     school_name = models.ForeignKey(admindb.SchoolDetail, on_delete = models.CASCADE, default=True)

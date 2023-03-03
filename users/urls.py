@@ -14,6 +14,7 @@ urlpatterns = [
     path('profile/', views.UserProfilePage, name='profile'),
     path('test/', views.TestPage, name='test'),
     path('buspassform/', views.BusPassForm, name='buspassform'),
-    path('trainpassform/', views.TrainPassForm, name='trainpassform')
+    path('trainpassform/', views.TrainPassForm, name='trainpassform'),
+    path('buspassapplication/', views.view_pass_forms, name='buspassapplication'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

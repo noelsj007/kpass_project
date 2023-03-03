@@ -1,0 +1,28 @@
+{% extends './dashindex.html' %}
+
+{% block content %}
+  <h1>Pass Forms</h1>
+  {% if pass_forms %}
+    <ul>
+      {% for form in pass_forms %}
+        <li>
+          <h2>{{ form.name }}</h2>
+          <p>Time Period: {{ form.time_periode }}</p>
+          <p>School Name: {{ form.school_name }}</p>
+          <p>Start Place: {{ form.start_place }}</p>
+          <p>End Place: {{ form.end_place }}</p>
+          <p>Age: {{ form.age }}</p>
+          <p>Date of Birth: {{ form.dob }}</p>
+          <p>Address: {{ form.address }}</p>
+          <p>Adhaar Number: {{ form.adhaar_no }}</p>
+          <p>Mobile Number: {{ form.mobile }}</p>
+          <p>ID Image: <img src="{{ form.idimage.url }}" width="200"></p>
+          <p>Adhaar Image: <img src="{{ form.adhaar_image.url }}" width="200"></p>
+          <p>Profile Image: <img src="{{ form.profileimage.url }}" width="200"></p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No pass forms found for this user.</p>
+  {% endif %}
+{% endblock %}

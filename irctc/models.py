@@ -1,5 +1,6 @@
 from django.db import models
 from adminapp import models as admindb
+from django.conf import settings
 # Create your models here.
 
 
@@ -49,6 +50,7 @@ class TrainStudentPassForm(models.Model):
     idimage = models.ImageField(upload_to='users/static/irctcimage/idimage', null=True, default=None)
 
 class TrainPassForm(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     name= models.CharField(max_length=100, default=None)
     time_periode = models.ForeignKey(TrainSubTime, on_delete = models.CASCADE, default=True)
     start_place = models.ForeignKey(TrainPlace, null=True, blank=True, on_delete =models.CASCADE, related_name="pass_start_tp")
