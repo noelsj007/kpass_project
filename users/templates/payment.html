@@ -1,0 +1,19 @@
+
+<h1>Pay {{ amount_inr }} INR to complete your application</h1>
+
+<form action="{% url 'razorpay_payment' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.id }}">
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="rzp_test_UxyD9gc8UOQsI8"
+        data-amount="{{ order.amount }}"
+        data-currency="INR"
+        data-name="Your Application Name"
+        data-description="Application Fee""
+        data-order_id="{{ order.id }}"
+        data-theme.color="#F37254"
+    ></script>
+</form>
+
+

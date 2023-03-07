@@ -64,6 +64,7 @@ class BusRouteForm(ModelForm):
         fields = '__all__'
 
 class KsrtcSubTimeForm(ModelForm):
+    sub_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Number of Days of Validity'}))
 
     class Meta:
         model = SubTime

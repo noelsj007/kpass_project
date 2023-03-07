@@ -16,5 +16,7 @@ urlpatterns = [
     path('buspassform/', views.BusPassForm, name='buspassform'),
     path('trainpassform/', views.TrainPassForm, name='trainpassform'),
     path('buspassapplication/', views.view_pass_forms, name='buspassapplication'),
+    # path('payment/<int:amount>/', views.payment, name='payment'),
+    path('razorpay_payment/', views.razorpay_payment, name='razorpay_payment'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

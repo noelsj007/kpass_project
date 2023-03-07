@@ -128,3 +128,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'users.CustomUser'
+
+RAZORPAY_KEY_ID = 'rzp_test_UxyD9gc8UOQsI8'
+RAZORPAY_KEY_SECRET = 'gp5XDx43fQs6kXHqYFAjSkZd'
+
+STRIPE_PUBLIC_KEY = ''
+STRIPE_SECRET_KEY = ''
+STRIPE_WEBHOOK_SECRET = ''

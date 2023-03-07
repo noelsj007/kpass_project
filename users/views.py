@@ -8,6 +8,12 @@ from django.contrib.auth.models import Group
 from .decorator import *
 from .models import *
 from ksrtc.models import *
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+import razorpay
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -117,7 +123,7 @@ def registerPage(request):
         
 #     return render(request, 'buspassform.html', {'school':school, 'place':place, 'subtime':subtime})
 
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def BusPassForm(request):
@@ -125,122 +131,70 @@ def BusPassForm(request):
     if request.method == 'POST':
         form = KsrtcPassFormField(request.POST, request.FILES)
         if form.is_valid():
-            # Get the start and end places from the form data
-            
-            start_place = form.cleaned_data['start_place']
-            end_place = form.cleaned_data['end_place']
-            start_place_g = get_geocode('start_place')
-            end_place_g = get_geocode('end_place')
-
-            # Calculate the distance between the start and end places
-            distance = calculate_distance(start_place, end_place)
-
-            # Calculate the fare for the distance
-            fare = calculate_fare(distance)
-
-            # Set the user field of the PassForm instance to the current user
             pass_form = form.save(commit=False)
-            pass_form.user = request.user
-            print(fare,distance)
+            pass_form.user = user
+
+            # Calculate the amount based on bus_rate and sub_time
+            sub_time = pass_form.time_periode.sub_time
+            bus_rate = pass_form.bus_rate
+            amount = int(0.1 * bus_rate * sub_time)
+            amount_inr = amount
+
+            # Initialize the Razorpay client
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+            # Create a new order
+            order = client.order.create({
+                'amount': amount * 100,  # Amount is in paisa
+                'currency': 'INR',
+                'payment_capture': '1'  # Auto-capture payment
+            })
+
+            # Save the order_id to the PassForm instance
+            pass_form.order_id = order['id']
+            pass_form.amount = amount
             pass_form.save()
 
-            messages.success(request, 'application submitted')
-            return redirect('dash')
+            # Render the payment page with the order details
+            return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr})
 
         else:
             messages.error(request, 'Error in submitting your application')
             print(form.errors)
-            return redirect('buspassform')
+
     else:
         form = KsrtcPassFormField(initial={'user': user})
 
-    return render(request, 'buspassform.html', {'form':form, 'user': user})
+    return render(request, 'buspassform.html', {'form': form, 'user': user})
 
 
-import requests
+@csrf_exempt
+def razorpay_payment(request):
+    if request.method == "POST":
+        # Get the Razorpay payment details from the POST request
+        order_id = request.POST.get('razorpay_order_id')
+        payment_id = request.POST.get('razorpay_payment_id')
+        signature = request.POST.get('razorpay_signature')
 
-import requests
+        # Verify the signature to ensure that the request has come from Razorpay
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        try:
+            client.utility.verify_payment_signature({
+                'razorpay_order_id': order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            })
+        except:
+            return JsonResponse({'status': 'failure'})
 
-def get_geocode(place):
-    url = "https://nominatim.openstreetmap.org/search"
-    params = {"q": place, "format": "json"}
-    response = requests.get(url, params=params).json()
-    if response:
-        latitude = response[0]["lat"]
-        longitude = response[0]["lon"]
-        return latitude, longitude
-    else:
-        return None, None
+        # Get the PassForm instance for the current user and update the 'paid' field to True
+        pass_form = PassForm.objects.filter(user=request.user, paid=False).first()
+        if pass_form:
+            pass_form.paid = True
+            pass_form.order_id = order_id
+            pass_form.save()
 
-
-import requests
-import json
-
-import requests
-import json
-
-def calculate_distance(start_place, end_place):
-    # Construct the API URL for the OpenStreetMap API
-    url = f"https://router.project-osrm.org/route/v1/driving/{start_place.longitude},{start_place.latitude};{end_place.longitude},{end_place.latitude}?overview=false"
-
-    # Make a request to the API and parse the response
-    response = requests.get(url)
-    data = json.loads(response.text)
-
-    # Get the distance in meters
-    distance_meters = data['routes'][0]['distance']
-
-    # Convert the distance to kilometers
-    distance_km = distance_meters / 1000
-
-    return distance_km
-
-
-
-
-def calculate_fare(distance):
-    # Base fare for the first 10 km
-    base_fare = 10
-    
-    # Fare per km beyond the first 10 km
-    fare_per_km = 0.5
-    
-    # Calculate the fare based on the distance
-    if distance <= 0:
-        return 0
-    elif distance <= 10:
-        return base_fare
-    else:
-        additional_distance = distance - 10
-        additional_fare = additional_distance * fare_per_km
-        total_fare = base_fare + additional_fare
-        return total_fare
-
-
-import requests
-import json
-
-# def calculate_distance(start_place, end_place):
-#     api_key = 'wcDYwipzkB01G4b57LcshuzmU5tX9NvK8G7pS73j_Ko'
-#     base_url = 'https://route.ls.hereapi.com/routing/7.2/calculateroute.json'
-
-#     start_gcode = f'{start_place.gcode_lat},{start_place.gcode_lng}'
-#     end_gcode = f'{end_place.gcode_lat},{end_place.gcode_lng}'
-
-#     payload = {
-#         'apiKey': api_key,
-#         'waypoint0': start_gcode,
-#         'waypoint1': end_gcode,
-#         'mode': 'fastest;car;traffic:enabled'
-#     }
-
-#     response = requests.get(base_url, params=payload)
-#     if response.status_code == 200:
-#         data = json.loads(response.content.decode('utf-8'))
-#         distance = data['response']['route'][0]['summary']['distance'] / 1000.0  # convert to km
-#         return distance
-#     else:
-#         return None
+        return JsonResponse({'status': 'success'})
 
 
 @login_required
@@ -248,6 +202,7 @@ def view_pass_forms(request):
     user = request.user
     pass_forms = PassForm.objects.filter(user=user)
     return render(request, 'viewpassforms.html', {'pass_forms': pass_forms})
+
 
 def TrainPassForm(request):
     user = request.user
