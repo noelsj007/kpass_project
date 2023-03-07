@@ -51,7 +51,7 @@ class PassForm(models.Model):
     adhaar_image = models.ImageField(upload_to='ksrtcimage/adhaar', null=True, default=None)
     profileimage = models.ImageField(upload_to='ksrtcimage/profileimage', null=True, default=None)
     bus_rate = models.IntegerField(null=True)
-    amount = models.DecimalField(null=True, blank=True, editable=False, max_digits=100, decimal_places=20)
+    amount = models.IntegerField(null=True, blank=True)
     order_id = models.CharField(max_length=255, null=True, blank=True)
     paid = models.BooleanField(default=False)
 
