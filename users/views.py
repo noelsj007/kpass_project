@@ -194,6 +194,24 @@ def razorpay_payment(request):
             pass_form.order_id = order_id
             pass_form.save()
 
+             # Get the school email from the PassForm instance
+            school_email = pass_form.school_name.school_email
+
+            # Send an email to the school email with the PassForm data and verification and cancel buttons
+            context = {
+                'pass_form': pass_form,
+                'verification_url': 'https://yourwebsite.com/verify',
+                'cancel_url': 'https://yourwebsite.com/cancel',
+            }
+            message = render_to_string('passform_email.html', context)
+            send_mail(
+                'Bus Pass Form',
+                message,
+                'your_email@example.com',
+                [school_email],
+                fail_silently=False,
+            )
+
         return JsonResponse({'status': 'success'})
 
 

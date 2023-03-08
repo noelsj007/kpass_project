@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>KSRTC Bus Pass Confirmation</title>
+  </head>
+  <body>
+    <h1>KSRTC Bus Pass Confirmation</h1>
+    <p>Dear {{ school_name }},</p>
+    <p>Thank you for processing the bus pass application for {{ name }}. We are happy to inform you that the payment has been received and the bus pass has been issued.</p>
+    <table>
+      <tr>
+        <th>Name:</th>
+        <td>{{ name }}</td>
+      </tr>
+      <tr>
+        <th>Time Period:</th>
+        <td>{{ time_periode }}</td>
+      </tr>
+      <tr>
+        <th>School Name:</th>
+        <td>{{ school_name }}</td>
+      </tr>
+      <tr>
+        <th>Start Place:</th>
+        <td>{{ start_place }}</td>
+      </tr>
+      <tr>
+        <th>End Place:</th>
+        <td>{{ end_place }}</td>
+      </tr>
+      <tr>
+        <th>Age:</th>
+        <td>{{ age }}</td>
+      </tr>
+      <tr>
+        <th>Date of Birth:</th>
+        <td>{{ dob }}</td>
+      </tr>
+      <tr>
+        <th>Address:</th>
+        <td>{{ address }}</td>
+      </tr>
+      <tr>
+        <th>Aadhaar Number:</th>
+        <td>{{ adhaar_no }}</td>
+      </tr>
+      <tr>
+        <th>Mobile Number:</th>
+        <td>{{ mobile }}</td>
+      </tr>
+      <tr>
+        <th>Bus Rate:</th>
+        <td>{{ bus_rate }}</td>
+      </tr>
+      <tr>
+        <th>Amount Paid:</th>
+        <td>{{ amount }}</td>
+      </tr>
+    </table>
+    <p>If you have any questions or concerns, please contact us at support@ksrtc.com.</p>
+    <p>Please verify the information above and click the button below to confirm the bus pass.</p>
+    <a href="{{ confirmation_url }}" style="background-color: #4CAF50; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin-bottom: 10px;">Confirm</a>
+    <p>If the information is incorrect, please click the button below to cancel the bus pass.</p>
+    <a href="{{ cancel_url }}" style="background-color: #f44336; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Cancel</a>
+  </body>
+</html>
