@@ -14,6 +14,7 @@ import razorpay
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -137,7 +138,7 @@ def BusPassForm(request):
             # Calculate the amount based on bus_rate and sub_time
             sub_time = pass_form.time_periode.sub_time
             bus_rate = pass_form.bus_rate
-            amount = int(0.1 * bus_rate * sub_time)
+            amount = int((0.1 * bus_rate * sub_time)*2)
             amount_inr = amount
 
             # Initialize the Razorpay client
@@ -170,6 +171,7 @@ def BusPassForm(request):
 
 @csrf_exempt
 def razorpay_payment(request):
+    
     if request.method == "POST":
         # Get the Razorpay payment details from the POST request
         order_id = request.POST.get('razorpay_order_id')
@@ -189,30 +191,46 @@ def razorpay_payment(request):
 
         # Get the PassForm instance for the current user and update the 'paid' field to True
         pass_form = PassForm.objects.filter(user=request.user, paid=False).first()
-        if pass_form:
+        verification_url = f"{request.scheme}://{request.get_host()}/{pass_form.id}/verify/"
+        if pass_form is not None:
+            print(f'PassForm instance found: {pass_form}')
             pass_form.paid = True
+            pass_form.payment_id = payment_id
+            pass_form.signature = signature
             pass_form.order_id = order_id
             pass_form.save()
+            print(f'PassForm instance updated: {pass_form}')
 
-             # Get the school email from the PassForm instance
-            school_email = pass_form.school_name.school_email
+            # Send an email to the school with the verification link
+            subject = 'Verification link for pass form'
+            message = f'Please verify the pass form submitted by {pass_form.name}. Click on the following link to verify:\n\n{verification_url}'
+            from_email = settings.EMAIL_HOST_USER
+            to_email = pass_form.school_name.school_email
+            send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-            # Send an email to the school email with the PassForm data and verification and cancel buttons
-            context = {
-                'pass_form': pass_form,
-                'verification_url': 'https://yourwebsite.com/verify',
-                'cancel_url': 'https://yourwebsite.com/cancel',
-            }
-            message = render_to_string('passform_email.html', context)
-            send_mail(
-                'Bus Pass Form',
-                message,
-                'your_email@example.com',
-                [school_email],
-                fail_silently=False,
-            )
+            return JsonResponse({'status': 'success'})
+        else:
+            print('No PassForm instance found for the current user')
+            return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})
+    else:
+        return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
 
-        return JsonResponse({'status': 'success'})
+def verifyBusPass(request, pass_id):
+    pass_form = PassForm.objects.filter(id=pass_id, is_verified=False).first()
+    print(pass_form.name)
+    # pass_form = PassForm.objects.filter(user=request.user, is_verified=False).first()
+    if request.method == 'POST':
+        if 'confirm' in request.POST:
+            pass_form.is_verified = True
+            pass_form.verification_date = datetime.date.today()
+            pass_form.save()
+            
+            print(f'PassForm instance updated: {pass_form}')
+            return JsonResponse({'status': 'success'})
+        elif 'cancel' in request.POST:
+            return redirect('verification_cancel.html')
+
+    return render(request, 'buspassverify.html', {'pass_form' : pass_form})
 
 
 @login_required

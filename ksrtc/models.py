@@ -3,6 +3,7 @@ from adminapp import models as admindb
 import datetime
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from datetime import timedelta
 # Create your models here.
 
 class Place(models.Model):
@@ -53,15 +54,30 @@ class PassForm(models.Model):
     bus_rate = models.IntegerField(null=True)
     amount = models.IntegerField(null=True, blank=True)
     order_id = models.CharField(max_length=255, null=True, blank=True)
+    signature = models.CharField(max_length=255, null=True, blank=True)
+    payment_id = models.CharField(max_length=255, null=True, blank=True)
     paid = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    verification_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Calculate amount based on bus_rate and sub_time
         sub_time = self.time_periode.sub_time
         bus_rate = self.bus_rate or 0.0
-        self.amount = int(0.1 * bus_rate * sub_time)
+        self.amount = int((0.1 * bus_rate * sub_time)*2)
 
         super().save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        subtime = self.time_periode.sub_time
+        verification_date = self.verification_date or 0.0
+        if self.verification_date:
+
+            self.end_date = verification_date + timedelta(days=subtime)
+            
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.name

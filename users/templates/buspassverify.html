@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Verification Page</title>
+</head>
+<body>
+	<h1>Verification Details:</h1>
+	< <li>
+        <h2>{{ pass_form.name }}</h2>
+        <p>Time Period: {{ pass_form.time_periode }}</p>
+        <p>School Name: {{ pass_form.school_name }}</p>
+        <p>Start Place: {{ pass_form.start_place }}</p>
+        <p>End Place: {{ pass_form.end_place }}</p>
+        <p>Age: {{ pass_form.age }}</p>
+        <p>Date of Birth: {{ pass_form.dob }}</p>
+        <p>Address: {{ pass_form.address }}</p>
+        <p>Adhaar Number: {{ pass_form.adhaar_no }}</p>
+        <p>Mobile Number: {{ pass_form.mobile }}</p>
+        <p>ID Image: <img src="{{ pass_form.idimage.url }}" width="200"></p>
+        <p>Adhaar Image: <img src="{{ pass_form.adhaar_image.url }}" width="200"></p>
+        <p>Profile Image: <img src="{{ pass_form.profileimage.url }}" width="200"></p>
+      </li>
+	<form method="POST" >
+		{% csrf_token %}
+		
+		<input type="submit" name="confirm" value="Confirm">
+		<input type="submit" name="cancel" value="Cancel">
+	</form>
+</body>
+</html>
