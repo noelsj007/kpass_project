@@ -16,6 +16,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django import forms
+from aadhaarcardscrapper import aadhaarScrapper
+import cv2
 
 # Create your views here.
 
@@ -139,30 +141,43 @@ def BusPassForm(request):
         if form.is_valid():
             pass_form = form.save(commit=False)
             pass_form.user = user
+            image = request.FILES.get('adhaar_image')
+            adhaar_no = request.POST.get('adhaar_no')
+            intadhaar_no = int(adhaar_no)
+            result = aadhaarScrapper(image)
+            # kyc_validator = aadhaarcardscrapper(request.adhaar_image)
+            print(type(result), result)
+            print(type(intadhaar_no), intadhaar_no)
+            if intadhaar_no == result:
 
-            # Calculate the amount based on bus_rate and sub_time
-            sub_time = pass_form.time_periode.sub_time
-            bus_rate = pass_form.bus_rate
-            amount = int((0.1 * bus_rate * sub_time)*2)
-            amount_inr = amount
 
-            # Initialize the Razorpay client
-            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-            # Create a new order
-            order = client.order.create({
-                'amount': amount * 100,  # Amount is in paisa
-                'currency': 'INR',
-                'payment_capture': '1'  # Auto-capture payment
-            })
+                # Calculate the amount based on bus_rate and sub_time
+                sub_time = pass_form.time_periode.sub_time
+                bus_rate = pass_form.bus_rate
+                amount = int((0.1 * bus_rate * sub_time)*2)
+                amount_inr = amount
 
-            # Save the order_id to the PassForm instance
-            pass_form.order_id = order['id']
-            pass_form.amount = amount
-            pass_form.save()
+                # Initialize the Razorpay client
+                client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-            # Render the payment page with the order details
-            return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr})
+                # Create a new order
+                order = client.order.create({
+                    'amount': amount * 100,  # Amount is in paisa
+                    'currency': 'INR',
+                    'payment_capture': '1'  # Auto-capture payment
+                })
+
+                # Save the order_id to the PassForm instance
+                pass_form.order_id = order['id']
+                pass_form.amount = amount
+                pass_form.save()
+
+                # Render the payment page with the order details
+                return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr})
+            
+            else:
+                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
 
         else:
             messages.error(request, 'Error in submitting your application')
