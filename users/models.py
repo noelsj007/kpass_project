@@ -83,3 +83,10 @@ class TrainVirtualPass(models.Model):
     start_place = models.ForeignKey(traindb.TrainPlace, null=True, blank=True, on_delete =models.CASCADE, related_name="star_place_pass")
     end_place = models.ForeignKey(traindb.TrainPlace, null=True, blank = True, on_delete = models.CASCADE, related_name = 'end_place_pass')
     log_check = models.BooleanField(default=False, null=True)
+
+class DailyBusPassView(models.Model):
+    pass_identity = models.ForeignKey(busdb.PassForm, on_delete = models.CASCADE, blank=True, null=True)
+    end_date = models.DateField()
+    today = models.DateField()
+    checkbox1 = models.BooleanField(default=False)
+    checkbox2 = models.BooleanField(default=False)

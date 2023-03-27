@@ -15,11 +15,16 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+from django import forms
 
 # Create your views here.
 
 # @login_required(login_url='login')
 def homePage(request):
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
+    previous_day_bus_pass_to_delete = DailyBusPassView.objects.filter(today=yesterday)
+    previous_day_bus_pass_to_delete.delete()
     return render(request, 'home.html')
 
 @login_required(login_url='login')
@@ -216,19 +221,22 @@ def razorpay_payment(request):
         return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
 
 def verifyBusPass(request, pass_id):
-    pass_form = PassForm.objects.filter(id=pass_id, is_verified=False).first()
-    print(pass_form.name)
-    # pass_form = PassForm.objects.filter(user=request.user, is_verified=False).first()
-    if request.method == 'POST':
-        if 'confirm' in request.POST:
-            pass_form.is_verified = True
-            pass_form.verification_date = datetime.date.today()
-            pass_form.save()
-            
-            print(f'PassForm instance updated: {pass_form}')
-            return JsonResponse({'status': 'success'})
-        elif 'cancel' in request.POST:
-            return redirect('verification_cancel.html')
+    pass_form = PassForm.objects.filter(id=pass_id).first()
+    if pass_form.is_verified:
+        return JsonResponse({'status': 'Already Verified'})
+    else:
+        print(pass_form.name)
+        # pass_form = PassForm.objects.filter(user=request.user, is_verified=False).first()
+        if request.method == 'POST':
+            if 'confirm' in request.POST:
+                pass_form.is_verified = True
+                pass_form.verification_date = datetime.date.today()
+                pass_form.save()
+                
+                print(f'PassForm instance updated: {pass_form}')
+                return JsonResponse({'status': 'success'})
+            elif 'cancel' in request.POST:
+                return redirect('verification_cancel.html')
 
     return render(request, 'buspassverify.html', {'pass_form' : pass_form})
 
@@ -258,3 +266,61 @@ def TrainPassForm(request):
     else:
         form = IrctcPassFormField(initial={'user': user})
     return render(request, 'trainpassform.html', {'form':form, 'user': user})
+
+def busPassView(request):
+    user = request.user
+    pass_forms = PassForm.objects.filter(user=user, is_verified=True)
+    return render(request, 'buspassview.html',{'pass_forms': pass_forms})
+
+def busVirtualPassView(request, pass_id):
+    user = request.user
+    pass_forms = PassForm.objects.filter(id=pass_id).first()
+    daily_pass = DailyBusPassView
+    if pass_forms.is_verified == True:
+        start_date = pass_forms.verification_date
+        end_date = datetime.datetime.strptime(str(pass_forms.end_date), '%Y-%m-%d').date()
+        print(end_date)
+        # end_date = datetime.date(pass_forms.end_date) 
+        today = datetime.datetime.now().date()
+        if today <= end_date:
+            daily_pass = DailyBusPassView.objects.get_or_create(today=today, end_date= end_date, pass_identity=pass_forms)
+            daily_pass_object = daily_pass[0]
+            print(daily_pass_object.checkbox1)
+            checkbox_data = {
+                'date': today,
+
+            }
+            if request.method == 'POST':
+                if 'checkbox1' in request.POST:
+                    daily_pass_object.checkbox1 = True
+        
+                if 'checkbox2' in request.POST:
+                    daily_pass_object.checkbox2 = True
+
+                daily_pass_object.save()
+            return render(request, 'busvirtualpassview.html', {'pass_forms': pass_forms, 'checkbox_data': checkbox_data, 'daily_pass' : daily_pass_object})
+        else:
+            return JsonResponse({'Status': 'Pass Expired'})
+    else:
+        return JsonResponse({'status' : 'Note verified'})
+    print(checkbox_data, end_date)
+
+  # dates = []
+    # current_date = start_date
+    # while current_date <= end_date:
+    #     dates.append(current_date)
+    #     current_date += timedelta(days=1)
+
+    # checkbox_data = []
+    # for date in dates:
+    #     checkbox_data.append({
+    #         'date' : date,
+    #         'cehckbox1' : forms.BooleanField(required=False),
+    #         'checkbox2' : forms.BooleanField(required=False),
+    #     })
+
+
+today = datetime.date.today()
+yesterday = today - datetime.timedelta(days=1)
+previous_day_bus_pass_to_delete = DailyBusPassView.objects.filter(today=yesterday)
+previous_day_bus_pass_to_delete.delete()

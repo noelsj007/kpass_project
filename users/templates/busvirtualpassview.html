@@ -1,0 +1,20 @@
+{% extends './dashindex.html' %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+
+<img style="width: 109px;" src="{{pass_forms.profileimage.url}}"><br>
+{{pass_forms.start_place}} <b>to</b>
+{{pass_forms.end_place}}
+    <h2>{{ checkbox_data.date }}</h2>
+
+    
+    <input type="checkbox" name="checkbox1" {% if daily_pass.checkbox1 %}checked disabled{% endif %}>
+    <label for="travel1">Travel 1</label><br>
+    <input type="checkbox" name="checkbox2" {% if daily_pass.checkbox2 %}checked disabled{% endif %}>
+<label for="travel1">Travel 2</label>
+
+<input type="submit" value="Confirm">
+</form>
+{% endblock %}
