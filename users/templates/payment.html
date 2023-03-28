@@ -1,7 +1,7 @@
 
 <h1>Pay {{ amount_inr }} INR to complete your application</h1>
-
-<form action="{% url 'razorpay_payment' %}" method="POST">
+pass_form.pass_id
+<form action="{% url 'razorpay_payment'  pass_id=pass_form.id  %}" method="POST">
     {% csrf_token %}
     <input type="hidden" name="order_id" value="{{ order.id }}">
     <script

@@ -20,7 +20,9 @@ def aadhaarScrapper(image):
     regex1 = r'DOB\s*:\s*(\d{1,2}/\d{1,2}/\d{4})'
     aadhaar_no = re.findall(regex, text2)
     dob = re.findall(regex1, text2)
-
+    
+    my_str = str(dob[0])
+    print(type(my_str))
     print(aadhaar_no, dob)
     num_list = aadhaar_no
     num_str = num_list[0]  # Extract the string from the list
@@ -30,5 +32,5 @@ def aadhaarScrapper(image):
     lines = text.groupby('block_num')['text'].apply(list)
     conf = text.groupby(['block_num'])['conf'].mean()
 
-    return num_int
+    return num_int, my_str
     

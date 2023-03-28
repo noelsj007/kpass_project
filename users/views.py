@@ -143,12 +143,17 @@ def BusPassForm(request):
             pass_form.user = user
             image = request.FILES.get('adhaar_image')
             adhaar_no = request.POST.get('adhaar_no')
+            dob = request.POST.get('dob')
+            dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
+            formatted_dob = dob_date.strftime('%d/%m/%Y') 
+            print(type(formatted_dob))
             intadhaar_no = int(adhaar_no)
-            result = aadhaarScrapper(image)
+            result_aadhaar, result_dob = aadhaarScrapper(image)
             # kyc_validator = aadhaarcardscrapper(request.adhaar_image)
-            print(type(result), result)
+            # print(type(result), result)
             print(type(intadhaar_no), intadhaar_no)
-            if intadhaar_no == result:
+            print(type(formatted_dob), type(result_dob), result_dob, formatted_dob)
+            if intadhaar_no == result_aadhaar and formatted_dob == result_dob:
 
 
 
@@ -174,7 +179,7 @@ def BusPassForm(request):
                 pass_form.save()
 
                 # Render the payment page with the order details
-                return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr})
+                return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
             
             else:
                 return JsonResponse({'status' : 'Aadhaar Verification Failed'})
@@ -190,7 +195,7 @@ def BusPassForm(request):
 
 
 @csrf_exempt
-def razorpay_payment(request):
+def razorpay_payment(request, pass_id):
     
     if request.method == "POST":
         # Get the Razorpay payment details from the POST request
@@ -210,7 +215,7 @@ def razorpay_payment(request):
             return JsonResponse({'status': 'failure'})
 
         # Get the PassForm instance for the current user and update the 'paid' field to True
-        pass_form = PassForm.objects.filter(user=request.user, paid=False).first()
+        pass_form = PassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
         verification_url = f"{request.scheme}://{request.get_host()}/{pass_form.id}/verify/"
         if pass_form is not None:
             print(f'PassForm instance found: {pass_form}')
