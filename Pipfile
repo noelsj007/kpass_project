@@ -9,6 +9,10 @@ gunicorn = "*"
 django-heroku = "*"
 pillow = "*"
 whitenoise = "*"
+razorpay = "*"
+celery = "*"
+stripe = "*"
+
 
 [dev-packages]
 
