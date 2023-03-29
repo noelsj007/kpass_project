@@ -12,7 +12,8 @@ whitenoise = "*"
 razorpay = "*"
 celery = "*"
 stripe = "*"
-
+requests = "*"
+package-name = "*"
 
 [dev-packages]
 
