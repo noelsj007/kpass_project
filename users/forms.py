@@ -34,19 +34,8 @@ class UserAdminCreationForm(UserCreationForm):
 
 #train pass forms
 
-class IrctcStudentPassFormField(ModelForm):
-    class Meta:
-        model = TrainStudentPassForm
-        fields = '__all__'
-    
-class IrctcPassFormField(ModelForm):
-    adhaar_image =  forms.FileField(widget=forms.ClearableFileInput)
-    profileimage =  forms.FileField(widget=forms.ClearableFileInput)
-    class Meta:
-        model = TrainPassForm
-        fields = '__all__'
-    
-#bus pass forms
+
+
 
 class TrainStPassFormField(forms.ModelForm):
     dob = forms.DateTimeField(label="Date", required=True, widget=NumberInput(attrs={'type':'date'}))
@@ -70,6 +59,34 @@ class TrainStPassFormField(forms.ModelForm):
         widgets = {
             'school_name': forms.Select(attrs={'class': 'custom-select'},
                                             choices=admindb.SchoolDetail.objects.all()),
+            'start_place': forms.Select(attrs={'class': 'custom-select'},
+                                            choices=Place.objects.all()),
+            'end_place': forms.Select(attrs={'class': 'custom-select'},
+                                            choices=Place.objects.all()),
+            'time_periode' : forms.Select(attrs={'class': 'custom-select'},
+                                            choices=SubTime.objects.all())
+        }
+
+
+class TrainPassFormField(forms.ModelForm):
+    dob = forms.DateTimeField(label="Date", required=True, widget=NumberInput(attrs={'type':'date'}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}))
+    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}))
+    adhaar_no = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Adhaar Number'}))
+    mobile = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Mobile'}))
+    address = forms.CharField(widget=forms.Textarea)
+    adhaar_image =  forms.FileField(widget=forms.ClearableFileInput)
+    profileimage =  forms.FileField(widget=forms.ClearableFileInput)
+    # school_name = forms.ModelChoiceField(queryset=admindb.SchoolDetail.objects.all(), attrs={'class' : 'custom-select'})
+
+
+        
+
+    class Meta:
+
+        model = TrainPassForm
+        fields = '__all__'
+        widgets = {
             'start_place': forms.Select(attrs={'class': 'custom-select'},
                                             choices=Place.objects.all()),
             'end_place': forms.Select(attrs={'class': 'custom-select'},

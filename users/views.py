@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserAdminCreationForm, KsrtcPassFormField, IrctcPassFormField, TrainStPassFormField
+from .forms import UserAdminCreationForm, KsrtcPassFormField, TrainStPassFormField, TrainPassFormField
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -36,18 +36,18 @@ def homePage(request):
 
 def dashPage(request):
     user = request.user
-    pass_forms=PassForm.objects.filter(user=user).all()
+    pass_forms=PassForm.objects.filter(user=user).order_by('-id')[:3]
     pass_form = PassForm.objects.filter(user=request.user, paid=True).last()
     subend_date = pass_form.end_date
     paid_pass_form_count = PassForm.objects.filter(user=user, paid=True).count()
     unpaid_pass_form_count = PassForm.objects.filter(user=user, paid=False).count()
-    total_bus_value = PassForm.objects.aggregate(total=Sum('amount'))['total']
-    total_train_value = TrainStudentPassForm.objects.aggregate(total=Sum('amount'))['total']
+    total_bus_value = PassForm.objects.filter(user=user).aggregate(total=Sum('amount'))['total']
+    total_train_value = TrainStudentPassForm.objects.filter(user=user).aggregate(total=Sum('amount'))['total']
     paid_train_pass_form = TrainStudentPassForm.objects.filter(user=user, paid=True).count()
     unpaid_train_pass_form = TrainStudentPassForm.objects.filter(user=user, paid=False).count()
     total_pass = paid_pass_form_count+paid_train_pass_form
     total_pending_pass = unpaid_pass_form_count+unpaid_train_pass_form
-    total_payment = total_bus_value+total_train_value
+    total_payment = (total_bus_value or 0) + (total_train_value or 0)
 
     context= {
         'subend_date' : subend_date,
@@ -317,7 +317,7 @@ def view_pass_forms(request):
     return render(request, 'viewpassforms.html', {'pass_forms': pass_forms})
 
 
-def TrainPassForm(request):
+def TrainPassFormPage(request):
 
 
     user = request.user
@@ -379,6 +379,117 @@ def TrainPassForm(request):
     return render(request, 'trainpassform.html', {'form': form, 'user': user})
 
 
+def TrainSeasonPassForm(request):
+
+    pass_form = TrainPassForm.objects.filter(user=request.user,id=15, paid=False).first()
+    print(pass_form)
+    user = request.user
+    if request.method == 'POST':
+        form = TrainPassFormField(request.POST, request.FILES)
+        if form.is_valid():
+            pass_form = form.save(commit=False)
+            pass_form.user = user
+            image = request.FILES.get('adhaar_image')
+            adhaar_no = request.POST.get('adhaar_no')
+            dob = request.POST.get('dob')
+            dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
+            formatted_dob = dob_date.strftime('%d/%m/%Y') 
+            print(type(formatted_dob))
+            intadhaar_no = int(adhaar_no)
+            result_aadhaar, result_dob = aadhaarScrapper(image)
+            # kyc_validator = aadhaarcardscrapper(request.adhaar_image)
+            # print(type(result), result)
+            print(type(intadhaar_no), intadhaar_no)
+            print(type(formatted_dob), type(result_dob), result_dob, formatted_dob)
+            if intadhaar_no == result_aadhaar and formatted_dob == result_dob:
+
+
+
+                # Calculate the amount based on bus_rate and sub_time
+                sub_time = pass_form.time_periode.sub_time
+                bus_rate = pass_form.trainst_rate
+                amount = int((0.1 * bus_rate * sub_time)*2)
+                amount_inr = amount
+
+                # Initialize the Razorpay client
+                client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+                # Create a new order
+                order = client.order.create({
+                    'amount': amount * 100,  # Amount is in paisa
+                    'currency': 'INR',
+                    'payment_capture': '1'  # Auto-capture payment
+                })
+
+                # Save the order_id to the PassForm instance
+                pass_form.order_id = order['id']
+                pass_form.amount = amount
+                
+                pass_form.save()
+
+                # Render the payment page with the order details
+                return render(request, 'trainseasonpay.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
+            
+            else:
+                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
+
+        else:
+            messages.error(request, 'Error in submitting your application')
+            print(form.errors)
+
+    else:
+        form = TrainPassFormField(initial={'user': user})
+
+    return render(request, 'trainseasonform.html', {'form': form, 'user': user})
+
+@csrf_exempt
+def train_razorpay_payment(request, pass_id):
+    
+    if request.method == "POST":
+        # Get the Razorpay payment details from the POST request
+        order_id = request.POST.get('razorpay_order_id')
+        payment_id = request.POST.get('razorpay_payment_id')
+        signature = request.POST.get('razorpay_signature')
+
+        # Verify the signature to ensure that the request has come from Razorpay
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        try:
+            client.utility.verify_payment_signature({
+                'razorpay_order_id': order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            })
+        except:
+            return JsonResponse({'status': 'failure'})
+
+        # Get the PassForm instance for the current user and update the 'paid' field to True
+        pass_form = TrainPassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
+        # verification_url = f"{request.scheme}://{request.get_host()}/{pass_form.id}/trainseason/verify/"  
+        if pass_form is not None:
+            print(f'PassForm instance found: {pass_form}')
+            pass_form.paid = True
+            pass_form.payment_id = payment_id
+            pass_form.signature = signature
+            pass_form.order_id = order_id
+            pass_form.verification_date = datetime.date.today()
+            pass_form.save()
+            print(f'PassForm instance updated: {pass_form}')
+
+            # # Send an email to the school with the verification link
+            # subject = 'Verification link for pass form'
+            # message = f'Please verify the pass form submitted by {pass_form.name}. Click on the following link to verify:\n\n{verification_url}'
+            # from_email = settings.EMAIL_HOST_USER
+            # to_email = pass_form.school_name.school_email
+            # send_mail(subject, message, from_email, [to_email], fail_silently=False)
+
+            return JsonResponse({'status': 'success'})
+        else:
+            print('No PassForm instance found for the current user')
+            return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})
+    else:
+        return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
+
+
 @csrf_exempt
 def trainst_razorpay_payment(request, pass_id):
     
@@ -426,16 +537,21 @@ def trainst_razorpay_payment(request, pass_id):
         return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
 
 
-def busPassView(request):
+def busPassView(request, pass_id):
     user = request.user
-    pass_forms = PassForm.objects.filter(user=user, is_verified=True)
+    pass_forms = PassForm.objects.filter(id=pass_id)
+    return render(request, 'buspassview.html',{'pass_forms': pass_forms})
+
+def trainstPassView(request, pass_id):
+    user = request.user
+    pass_forms = TrainStudentPassForm.objects.filter(id=pass_id)
     return render(request, 'buspassview.html',{'pass_forms': pass_forms})
 
 def busVirtualPassView(request, pass_id):
     user = request.user
     pass_forms = PassForm.objects.filter(id=pass_id).first()
     daily_pass = DailyBusPassView
-    if pass_forms.is_verified == True:
+    if pass_forms is not None and pass_forms.is_verified == True:
         start_date = pass_forms.verification_date
         end_date = datetime.datetime.strptime(str(pass_forms.end_date), '%Y-%m-%d').date()
         print(end_date)
@@ -443,6 +559,40 @@ def busVirtualPassView(request, pass_id):
         today = datetime.datetime.now().date()
         if today <= end_date:
             daily_pass = DailyBusPassView.objects.get_or_create(today=today, end_date= end_date, pass_identity=pass_forms)
+            daily_pass_object = daily_pass[0]
+            print(daily_pass_object.checkbox1)
+            checkbox_data = {
+                'date': today,
+
+            }
+            if request.method == 'POST':
+                if 'checkbox1' in request.POST:
+                    daily_pass_object.checkbox1 = True
+        
+                if 'checkbox2' in request.POST:
+                    daily_pass_object.checkbox2 = True
+
+                daily_pass_object.save()
+            return render(request, 'busvirtualpassview.html', {'pass_forms': pass_forms, 'checkbox_data': checkbox_data, 'daily_pass' : daily_pass_object})
+        else:
+            return JsonResponse({'Status': 'Pass Expired'})
+    else:
+        return JsonResponse({'status' : 'Note verified'})
+    print(checkbox_data, end_date)
+
+
+def trainstVirtualPassView(request, pass_id):
+    user = request.user
+    pass_forms = TrainStudentPassForm.objects.filter(id=pass_id).first()
+    daily_pass = DailyTrainstPassView
+    if pass_forms is not None and pass_forms.is_verified == True:
+        start_date = pass_forms.verification_date
+        end_date = datetime.datetime.strptime(str(pass_forms.end_date), '%Y-%m-%d').date()
+        print(end_date)
+        # end_date = datetime.date(pass_forms.end_date) 
+        today = datetime.datetime.now().date()
+        if today <= end_date:
+            daily_pass = DailyTrainstPassView.objects.get_or_create(today=today, end_date= end_date, pass_identity=pass_forms)
             daily_pass_object = daily_pass[0]
             print(daily_pass_object.checkbox1)
             checkbox_data = {
@@ -483,3 +633,52 @@ today = datetime.date.today()
 yesterday = today - datetime.timedelta(days=1)
 previous_day_bus_pass_to_delete = DailyBusPassView.objects.filter(today=yesterday)
 previous_day_bus_pass_to_delete.delete()
+
+@login_required()
+def UserBPassPage(request):
+    user = request.user
+    bpass_details = PassForm.objects.filter(user=user)
+
+
+
+    context = {'bpass_details': bpass_details}
+    return render(request, 'userbuspass.html', context)
+
+def UserTSPassPage(request):
+    user = request.user
+    tspass_details = TrainStudentPassForm.objects.filter(user=user)
+
+
+
+    context = {'tspass_details': tspass_details}
+    return render(request, 'usertrainstpass.html', context)
+
+def PassApplicationPage(request):
+    user = request.user
+    tspass_details = TrainStudentPassForm.objects.filter(user=user, is_verified=False)
+    bpass_details = PassForm.objects.filter(user=user, is_verified=False)
+    tpass_details = TrainPassForm.objects.filter(user=user, paid=False)
+
+
+
+    context = {
+        'tspass_details': tspass_details,
+        'bpass_details': bpass_details,
+        'tpass_details':tpass_details
+        }
+    return render(request, 'passapplication.html', context)
+
+def virtualPassPreview(request):
+    user = request.user
+    tspass_details = TrainStudentPassForm.objects.filter(user=user, is_verified=True, paid=True)
+    bpass_details = PassForm.objects.filter(user=user, is_verified=True, paid=True)
+    tpass_details = TrainPassForm.objects.filter(user=user, paid=False)
+
+
+
+    context = {
+        'tspass_details': tspass_details,
+        'bpass_details': bpass_details,
+        'tpass_details':tpass_details
+        }
+    return render(request, 'virtualpasspre.html', context)

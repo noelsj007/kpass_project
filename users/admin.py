@@ -35,3 +35,4 @@ def __str__(self):
 admin.site.register(TrainVirtualPass)
 admin.site.register(BusVirtualPass)
 admin.site.register(DailyBusPassView)
+admin.site.register(DailyTrainstPassView)

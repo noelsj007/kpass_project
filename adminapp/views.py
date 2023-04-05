@@ -11,6 +11,7 @@ from users import models as Users
 from ksrtc import models as ksrtc
 from irctc import models as irctc
 from irctc import forms as trainform
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -19,11 +20,29 @@ from irctc import forms as trainform
 def homePage(request):
 
     
-    admin_count = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin', 'BusAdmin', 'SuperAdmin']).count()
+    admin_count = Users.CustomUser.objects.filter(groups__name__in=['BusAdmin']).count()
+    train_admin = Users.CustomUser.objects.filter(groups__name__in=['TrainAdmin']).count()
     user_count = Users.CustomUser.objects.filter(groups__name__in = ['customer']).count()
+    total_bus_value = PassForm.objects.aggregate(total=Sum('amount'))['total']
+    total_train_value = TrainStudentPassForm.objects.aggregate(total=Sum('amount'))['total']
+    total_payment = (total_bus_value or 0) + (total_train_value or 0)
+    unpaid_train_pass_form = TrainStudentPassForm.objects.filter(paid=False).count()
+    unpaid_pass_form_count = PassForm.objects.filter(paid=False).count()
+    total_pending_pass = unpaid_pass_form_count+unpaid_train_pass_form
+    pass_form = PassForm.objects.filter(paid=True).order_by('-id')[:3]
+    pass_forms=PassForm.objects.filter(paid=True).order_by('-id')[:3]
+
+
 
     print(admin_count, user_count)
-    context={'admin_count': admin_count, 'user_count': user_count}
+    context={
+        'admin_count': admin_count, 
+        'user_count': user_count, 
+        'train_admin': train_admin,
+        'total_payment' : total_payment,
+        'total_pending_pass' : total_pending_pass,
+        'pass_forms' : pass_forms,
+        }
 
     return render(request, 'adminhome.html', context )
 

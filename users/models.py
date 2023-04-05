@@ -90,3 +90,10 @@ class DailyBusPassView(models.Model):
     today = models.DateField()
     checkbox1 = models.BooleanField(default=False)
     checkbox2 = models.BooleanField(default=False)
+
+class DailyTrainstPassView(models.Model):
+    pass_identity = models.ForeignKey(traindb.TrainStudentPassForm, on_delete = models.CASCADE, blank=True, null=True)
+    end_date = models.DateField()
+    today = models.DateField()
+    checkbox1 = models.BooleanField(default=False)
+    checkbox2 = models.BooleanField(default=False)

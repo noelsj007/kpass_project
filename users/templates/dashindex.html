@@ -108,9 +108,9 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Details:</h6>
-                        <a class="collapse-item" href="login.html">Pass View</a>
-                        <a class="collapse-item" href="register.html">Application</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <a class="collapse-item" href="{% url 'userbpass' %}">Bus Pass View</a>
+                        <a class="collapse-item" href="{% url 'usertspass' %}">Train Pass View</a>
+                        <a class="collapse-item" href="{% url 'passapplication' %}">Application</a>
                         <div class="collapse-divider"></div>
                     </div>
                 </div>
@@ -118,14 +118,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.html">
+                <a class="nav-link" href="{% url 'trainseasonpassform' %}">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Train Season Pass</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'virtualpasspre' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Virtual Pass</span></a>
             </li>
