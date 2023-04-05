@@ -1,7 +1,132 @@
+{% load static %}
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Train Student Pass</title>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'><link rel="stylesheet" href="{% static 'buspassstyle.css/' %}">
 
-<form method="POST" enctype="multipart/form-data">
-{% csrf_token %}
-{{ form.as_p }}
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Fill Train Pass Application</h2>
+                <p>Fill all form field to go to next step</p>
+                <form  id="msform" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active" id="account"><strong>Account</strong></li>
+                        <li id="personal"><strong>Personal</strong></li>
+                        <li id="payment"><strong>Image</strong></li>
+                        <li id="confirm"><strong>Finish</strong></li>
+                    </ul>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div> <br> <!-- fieldsets -->
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Account Information:</h2>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 1 - 4</h2>
+                                </div>
+                            </div> 
+                            <label class="fieldlabels">Name: *</label> 
+                            {{form.user.as_hidden}}
+                            {{form.name}} 
+                            <label class="fieldlabels">Age: *</label>
+                            {{form.age}}
+                            <label class="fieldlabels">DOB: *</label>
+                            {{form.dob}} 
+                            <label class="fieldlabels">Mobile: *</label>
+                            {{form.mobile}}
+                            <label class="fieldlabels">Adhaar No: *</label>
+                            {{form.adhaar_no}}
+                            <label class="fieldlabels">Address: *</label>
+                            {{form.address}}
+                        </div> <input type="button" name="next" class="next action-button" value="Next" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Personal Information:</h2>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 2 - 4</h2>
+                                </div>
+                            </div> 
+                            <label class="fieldlabels">School Name: *</label> 
+                            {{form.school_name}}
+                            <label class="fieldlabels">Starting Place: *</label> 
+                            {{form.start_place}}
+                              <label class="fieldlabels">Destination: *</label> 
+                              {{form.end_place}}
+                            <label class="fieldlabels">Time Period: *</label>
+                            {{form.time_periode}}
+                            <label class="fieldlabels">Current Bus Rate: *</label>
+                            {{form.train_rate}}
+                              </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Image Upload:</h2>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 3 - 4</h2>
+                                </div>
+                            </div> <label class="fieldlabels">Upload Your Photo:</label> 
+                            {{form.profileimage}}
+                            <label class="fieldlabels">Upload ID Photo:</label> 
+                            {{form.idimage}}
+                            <label class="fieldlabels">Upload Adhaar Photo:</label> 
+                            {{form.adhaar_image}}
+                        </div> <input type="submit" name="submit" class="submit action-button" value="Submit"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Finish:</h2>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 4 - 4</h2>
+                                </div>
+                            </div> <br><br>
+                            <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                            <div class="row justify-content-center">
+                                <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
+                            </div> <br><br>
+                            <div class="row justify-content-center">
+                                <div class="col-7 text-center">
+                                    <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    {% for message in messages %}
+            <p style='background-color: grey;
+            color: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            margin: bottom 10px;'>{{message}}</p><br>
+        {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script><script  src="{% static 'buspassjs.js' %}"></script>
 
-<input type="submit"  value="submit">
-</form>
+</body>
+</html>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserAdminCreationForm, KsrtcPassFormField, IrctcPassFormField
+from .forms import UserAdminCreationForm, KsrtcPassFormField, IrctcPassFormField, TrainStPassFormField
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group
 from .decorator import *
 from .models import *
 from ksrtc.models import *
+from irctc.models import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 import razorpay
@@ -18,6 +19,7 @@ from django.core.mail import send_mail
 from django import forms
 from aadhaarcardscrapper import aadhaarScrapper
 import cv2
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -33,7 +35,34 @@ def homePage(request):
 # @allowed_users(allowed_roles=['customer', 'superadmin', 'admin'])
 
 def dashPage(request):
-    return render(request, 'userdashboard.html')
+    user = request.user
+    pass_forms=PassForm.objects.filter(user=user).all()
+    pass_form = PassForm.objects.filter(user=request.user, paid=True).last()
+    subend_date = pass_form.end_date
+    paid_pass_form_count = PassForm.objects.filter(user=user, paid=True).count()
+    unpaid_pass_form_count = PassForm.objects.filter(user=user, paid=False).count()
+    total_bus_value = PassForm.objects.aggregate(total=Sum('amount'))['total']
+    total_train_value = TrainStudentPassForm.objects.aggregate(total=Sum('amount'))['total']
+    paid_train_pass_form = TrainStudentPassForm.objects.filter(user=user, paid=True).count()
+    unpaid_train_pass_form = TrainStudentPassForm.objects.filter(user=user, paid=False).count()
+    total_pass = paid_pass_form_count+paid_train_pass_form
+    total_pending_pass = unpaid_pass_form_count+unpaid_train_pass_form
+    total_payment = total_bus_value+total_train_value
+
+    context= {
+        'subend_date' : subend_date,
+        'paid_pass_form_count' : paid_pass_form_count,
+        'unpaid_pass_form_count' : unpaid_pass_form_count,
+        # 'total_amount' : total_value,
+        'pass_form' : pass_form,
+        'pass_forms' : pass_forms,
+        'paid_train_pass_form' : paid_train_pass_form,
+        'unpaid_train_pass_form' : unpaid_train_pass_form,
+        'total_pass' : total_pass,
+        'total_pending_pass' : total_pending_pass,
+        'total_payment' : total_payment
+    }
+    return render(request, 'userdashboard.html', context)
 
 def UserProfilePage(request):
 
@@ -260,6 +289,26 @@ def verifyBusPass(request, pass_id):
 
     return render(request, 'buspassverify.html', {'pass_form' : pass_form})
 
+def verifyTrainPass(request, pass_id):
+    pass_form = TrainStudentPassForm.objects.filter(id=pass_id).first()
+    if pass_form.is_verified:
+        return JsonResponse({'status': 'Already Verified'})
+    else:
+        print(pass_form.name)
+        # pass_form = PassForm.objects.filter(user=request.user, is_verified=False).first()
+        if request.method == 'POST':
+            if 'confirm' in request.POST:
+                pass_form.is_verified = True
+                pass_form.verification_date = datetime.date.today()
+                pass_form.save()
+                
+                print(f'PassForm instance updated: {pass_form}')
+                return JsonResponse({'status': 'success'})
+            elif 'cancel' in request.POST:
+                return redirect('verification_cancel.html')
+
+    return render(request, 'trainpassverify.html', {'pass_form' : pass_form})
+
 
 @login_required
 def view_pass_forms(request):
@@ -269,23 +318,113 @@ def view_pass_forms(request):
 
 
 def TrainPassForm(request):
+
+
     user = request.user
     if request.method == 'POST':
-        form = IrctcPassFormField(request.POST, request.FILES)
+        form = TrainStPassFormField(request.POST, request.FILES)
         if form.is_valid():
-            pass_form=form.save(commit=False)
-            pass_form.user = request.user
-            pass_form.save()
-            messages.success(request, 'application submitted')
-            return redirect('dash')
+            pass_form = form.save(commit=False)
+            pass_form.user = user
+            image = request.FILES.get('adhaar_image')
+            adhaar_no = request.POST.get('adhaar_no')
+            dob = request.POST.get('dob')
+            dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
+            formatted_dob = dob_date.strftime('%d/%m/%Y') 
+            print(type(formatted_dob))
+            intadhaar_no = int(adhaar_no)
+            result_aadhaar, result_dob = aadhaarScrapper(image)
+            # kyc_validator = aadhaarcardscrapper(request.adhaar_image)
+            # print(type(result), result)
+            print(type(intadhaar_no), intadhaar_no)
+            print(type(formatted_dob), type(result_dob), result_dob, formatted_dob)
+            if intadhaar_no == result_aadhaar and formatted_dob == result_dob:
+
+
+
+                # Calculate the amount based on bus_rate and sub_time
+                sub_time = pass_form.time_periode.sub_time
+                bus_rate = pass_form.train_rate
+                amount = int((0.1 * bus_rate * sub_time)*2)
+                amount_inr = amount
+
+                # Initialize the Razorpay client
+                client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+                # Create a new order
+                order = client.order.create({
+                    'amount': amount * 100,  # Amount is in paisa
+                    'currency': 'INR',
+                    'payment_capture': '1'  # Auto-capture payment
+                })
+
+                # Save the order_id to the PassForm instance
+                pass_form.order_id = order['id']
+                pass_form.amount = amount
+                pass_form.save()
+
+                # Render the payment page with the order details
+                return render(request, 'trainpayment.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
+            
+            else:
+                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
 
         else:
             messages.error(request, 'Error in submitting your application')
             print(form.errors)
-            return redirect('trainpassform')
+
     else:
-        form = IrctcPassFormField(initial={'user': user})
-    return render(request, 'trainpassform.html', {'form':form, 'user': user})
+        form = TrainStPassFormField(initial={'user': user})
+
+    return render(request, 'trainpassform.html', {'form': form, 'user': user})
+
+
+@csrf_exempt
+def trainst_razorpay_payment(request, pass_id):
+    
+    if request.method == "POST":
+        # Get the Razorpay payment details from the POST request
+        order_id = request.POST.get('razorpay_order_id')
+        payment_id = request.POST.get('razorpay_payment_id')
+        signature = request.POST.get('razorpay_signature')
+
+        # Verify the signature to ensure that the request has come from Razorpay
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        try:
+            client.utility.verify_payment_signature({
+                'razorpay_order_id': order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            })
+        except:
+            return JsonResponse({'status': 'failure'})
+
+        # Get the PassForm instance for the current user and update the 'paid' field to True
+        pass_form = TrainStudentPassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
+        verification_url = f"{request.scheme}://{request.get_host()}/{pass_form.id}/train/verify/"
+        if pass_form is not None:
+            print(f'PassForm instance found: {pass_form}')
+            pass_form.paid = True
+            pass_form.payment_id = payment_id
+            pass_form.signature = signature
+            pass_form.order_id = order_id
+            pass_form.save()
+            print(f'PassForm instance updated: {pass_form}')
+
+            # Send an email to the school with the verification link
+            subject = 'Verification link for pass form'
+            message = f'Please verify the pass form submitted by {pass_form.name}. Click on the following link to verify:\n\n{verification_url}'
+            from_email = settings.EMAIL_HOST_USER
+            to_email = pass_form.school_name.school_email
+            send_mail(subject, message, from_email, [to_email], fail_silently=False)
+
+            return JsonResponse({'status': 'success'})
+        else:
+            print('No PassForm instance found for the current user')
+            return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})
+    else:
+        return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
+
 
 def busPassView(request):
     user = request.user
