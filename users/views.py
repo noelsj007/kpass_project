@@ -580,6 +580,11 @@ def busVirtualPassView(request, pass_id):
         return JsonResponse({'status' : 'Note verified'})
     print(checkbox_data, end_date)
 
+def TrainVirtualPassPage(request, pass_id):
+    user = request.user
+    pass_forms = TrainPassForm.objects.filter(id=pass_id).first()
+    return render(request, 'trainseasonv.html', {'pass_forms':pass_forms})
+
 
 def trainstVirtualPassView(request, pass_id):
     user = request.user
@@ -672,7 +677,7 @@ def virtualPassPreview(request):
     user = request.user
     tspass_details = TrainStudentPassForm.objects.filter(user=user, is_verified=True, paid=True)
     bpass_details = PassForm.objects.filter(user=user, is_verified=True, paid=True)
-    tpass_details = TrainPassForm.objects.filter(user=user, paid=False)
+    tpass_details = TrainPassForm.objects.filter(user=user, paid=True)
 
 
 

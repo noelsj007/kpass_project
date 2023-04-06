@@ -1,0 +1,26 @@
+{% extends './dashindex.html' %}
+
+{% block content %}
+  <h1>Pass Forms</h1>
+  {% if pass_forms %}
+    <ul>
+      
+        <li>
+          <h2>{{ pass_forms.name }}</h2>
+          <p>Time Period: {{ pass_forms.time_periode }}</p>
+          <p>Start Place: {{ pass_forms.start_place }}</p>
+          <p>End Place: {{ pass_forms.end_place }}</p>
+          <p>Age: {{ pass_forms.age }}</p>
+          <p>Date of Birth: {{ pass_forms.dob }}</p>
+          <p>Address: {{ pass_forms.address }}</p>
+          <p>Adhaar Number: {{ pass_forms.adhaar_no }}</p>
+          <p>Mobile Number: {{ pass_forms.mobile }}</p>
+          <p>Adhaar Image: <img src="{{ pass_forms.adhaar_image.url }}" width="200"></p>
+          <p>Profile Image: <img src="{{ pass_forms.profileimage.url }}" width="200"></p>
+        </li>
+      
+    </ul>
+  {% else %}
+    <p>No pass forms found for this user.</p>
+  {% endif %}
+{% endblock %}

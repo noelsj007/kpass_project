@@ -30,6 +30,7 @@ urlpatterns = [
     path('userbpass/', views.UserBPassPage, name='userbpass'),
     path('usertspass/', views.UserTSPassPage, name='usertspass'),
     path('passapplication/', views.PassApplicationPage, name='passapplication'),
-    path('virtualpasspreview/', views.virtualPassPreview, name='virtualpasspre')
+    path('virtualpasspreview/', views.virtualPassPreview, name='virtualpasspre'),
+    path('<int:pass_id>/trainseasonv/', views.TrainVirtualPassPage, name='trainseasonv')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
