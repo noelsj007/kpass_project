@@ -26,6 +26,12 @@ class BusRoute(models.Model):
     def __str__(self):
         return self.Route_name
 
+class Buses(models.Model):
+    Route_name = models.ForeignKey(BusRoute, on_delete=models.CASCADE, related_name='buses_route')
+    bus_number = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.bus_number
 
 
 class SubTime(models.Model):

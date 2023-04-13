@@ -26,6 +26,10 @@ class TrainRoute(models.Model):
     def __str__(self):
         return self.train_route_name
 
+class Trains(models.Model):
+    Route_name = models.ForeignKey(TrainRoute, on_delete=models.CASCADE, related_name="trains_route")
+    train_no = models.CharField(max_length=100,null=True, blank=True)
+
 
 class TrainSubTime(models.Model):
     sub_time = models.IntegerField(null=True)

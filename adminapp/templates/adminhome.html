@@ -7,8 +7,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        
                     </div>
 
                     <!-- Content Row -->
@@ -193,77 +192,39 @@
                         </div>
                     </div>
 
-                    <!-- Content Row -->
+                   <!-- Content Row -->
                             <!-- Color System -->
+                            
                             <div class="row">
+                                {% for i in train_route %}
                                 <div class="col-lg-6 mb-4">
                                     <div class="card bg-primary text-white shadow">
                                         <div class="card-body">
-                                            Primary
-                                            <div class="text-white-50 small">#4e73df</div>
+                                            {{i.train_route_name}}
+                                            <div class="text-white-50 small">{{i.train_start_place}} to {{i.train_end_place}}</div>
+                                            <div class="text-white-50 small">{{i.trains_route.count}}Trains</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-success text-white shadow">
-                                        <div class="card-body">
-                                            Success
-                                            <div class="text-white-50 small">#1cc88a</div>
+                                {% endfor %}
+                                </div>
+                                <div class="row">
+                                    {% for i in bus_routes %}
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="card bg-primary text-white shadow">
+                                            <div class="card-body">
+                                                {{i.Route_name}}
+                                                <div class="text-white-50 small">{{i.start_place}} to {{i.end_place}}</div>
+                                                <div class="text-white-50 small">{{i.buses_route.count}}Buses</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
-                                        <div class="card-body">
-                                            Info
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
+                                    {% endfor %}
                                     </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-danger text-white shadow">
-                                        <div class="card-body">
-                                            Danger
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                            <div class="text-white-50 small">#5a5c69</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    
+                                
+                                
                             </div>
-
-                        </div>
-
                         <div class="col-lg-6 mb-4">
 
                             <!-- Illustrations -->

@@ -19,3 +19,8 @@ class PassFormField(ModelForm):
     model = PassForm()
     fields = ['name', 'time_periode', 'school_name', 'start_place','end_place', 'age', 'address', 'adhaar_no', 'mobile','idimage','adhaarimage', 'profileimage']
 
+class BusesForm(ModelForm):
+
+    class Meta:
+        model = Buses
+        fields = '__all__'

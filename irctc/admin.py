@@ -7,5 +7,5 @@ admin.site.register(TrainPlace)
 admin.site.register(TrainStudentPassForm)
 admin.site.register(TrainPassForm)
 admin.site.register(TrainSubTime)
-
+admin.site.register(Trains)
 

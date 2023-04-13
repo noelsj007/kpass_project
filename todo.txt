@@ -1,5 +1,5 @@
 Need to design the Pass view page
 Need to design the virtual pass view page
-Copy and paste busadmin and trainadmin functions from superadmin
-Need to design the edit form in the admin pages
+Copy and paste busadmin and trainadmin functions from superadmin, done
+Need to design the edit form in the admin pages, done
 Done with the project Completed :) :)................................

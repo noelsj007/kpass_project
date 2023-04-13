@@ -31,6 +31,15 @@ def homePage(request):
     previous_day_bus_pass_to_delete.delete()
     return render(request, 'home.html')
 
+def successPage(request):
+    return render(request, 'success.html')
+
+def failPage(request):
+    return render(request, 'fail.html')
+
+def afailPage(request):
+    return render(request, 'aadhaarfail.html')
+
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['customer', 'superadmin', 'admin'])
 
@@ -48,6 +57,8 @@ def dashPage(request):
     total_pass = paid_pass_form_count+paid_train_pass_form
     total_pending_pass = unpaid_pass_form_count+unpaid_train_pass_form
     total_payment = (total_bus_value or 0) + (total_train_value or 0)
+    train_route = TrainRoute.objects.all()
+    bus_routes = BusRoute.objects.all()
 
     context= {
         'subend_date' : subend_date,
@@ -60,7 +71,9 @@ def dashPage(request):
         'unpaid_train_pass_form' : unpaid_train_pass_form,
         'total_pass' : total_pass,
         'total_pending_pass' : total_pending_pass,
-        'total_payment' : total_payment
+        'total_payment' : total_payment,
+        'train_route': train_route,
+        'bus_routes' : bus_routes,
     }
     return render(request, 'userdashboard.html', context)
 
@@ -211,7 +224,7 @@ def BusPassForm(request):
                 return render(request, 'payment.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
             
             else:
-                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
+                return redirect('afail')
 
         else:
             messages.error(request, 'Error in submitting your application')
@@ -241,7 +254,7 @@ def razorpay_payment(request, pass_id):
                 'razorpay_signature': signature
             })
         except:
-            return JsonResponse({'status': 'failure'})
+            return redirect('fail')
 
         # Get the PassForm instance for the current user and update the 'paid' field to True
         pass_form = PassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
@@ -262,12 +275,12 @@ def razorpay_payment(request, pass_id):
             to_email = pass_form.school_name.school_email
             send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-            return JsonResponse({'status': 'success'})
+            return redirect('success')
         else:
             print('No PassForm instance found for the current user')
             return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})
     else:
-        return JsonResponse({'status': 'failure', 'message': 'Invalid request method'})
+        return redirect('fail')
 
 def verifyBusPass(request, pass_id):
     pass_form = PassForm.objects.filter(id=pass_id).first()
@@ -283,7 +296,7 @@ def verifyBusPass(request, pass_id):
                 pass_form.save()
                 
                 print(f'PassForm instance updated: {pass_form}')
-                return JsonResponse({'status': 'success'})
+                return redirect('success')
             elif 'cancel' in request.POST:
                 return redirect('verification_cancel.html')
 
@@ -303,7 +316,7 @@ def verifyTrainPass(request, pass_id):
                 pass_form.save()
                 
                 print(f'PassForm instance updated: {pass_form}')
-                return JsonResponse({'status': 'success'})
+                return redirect('success')
             elif 'cancel' in request.POST:
                 return redirect('verification_cancel.html')
 
@@ -367,7 +380,7 @@ def TrainPassFormPage(request):
                 return render(request, 'trainpayment.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
             
             else:
-                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
+                return redirect('afail')
 
         else:
             messages.error(request, 'Error in submitting your application')
@@ -381,8 +394,8 @@ def TrainPassFormPage(request):
 
 def TrainSeasonPassForm(request):
 
-    pass_form = TrainPassForm.objects.filter(user=request.user,id=15, paid=False).first()
-    print(pass_form)
+    
+    
     user = request.user
     if request.method == 'POST':
         form = TrainPassFormField(request.POST, request.FILES)
@@ -431,7 +444,7 @@ def TrainSeasonPassForm(request):
                 return render(request, 'trainseasonpay.html', {'order': order, 'amount_inr' : amount_inr, 'pass_form' : pass_form})
             
             else:
-                return JsonResponse({'status' : 'Aadhaar Verification Failed'})
+                return redirect('afail')
 
         else:
             messages.error(request, 'Error in submitting your application')
@@ -460,7 +473,7 @@ def train_razorpay_payment(request, pass_id):
                 'razorpay_signature': signature
             })
         except:
-            return JsonResponse({'status': 'failure'})
+            return redirect('fail')
 
         # Get the PassForm instance for the current user and update the 'paid' field to True
         pass_form = TrainPassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
@@ -482,7 +495,7 @@ def train_razorpay_payment(request, pass_id):
             # to_email = pass_form.school_name.school_email
             # send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-            return JsonResponse({'status': 'success'})
+            return redirect('success')
         else:
             print('No PassForm instance found for the current user')
             return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})
@@ -508,7 +521,7 @@ def trainst_razorpay_payment(request, pass_id):
                 'razorpay_signature': signature
             })
         except:
-            return JsonResponse({'status': 'failure'})
+            return redirect('fail')
 
         # Get the PassForm instance for the current user and update the 'paid' field to True
         pass_form = TrainStudentPassForm.objects.filter(user=request.user,id=pass_id, paid=False).first()
@@ -529,7 +542,7 @@ def trainst_razorpay_payment(request, pass_id):
             to_email = pass_form.school_name.school_email
             send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-            return JsonResponse({'status': 'success'})
+            return redirect('success')
         else:
             print('No PassForm instance found for the current user')
             return JsonResponse({'status': 'failure', 'message': 'No unpaid pass forms found for the current user'})

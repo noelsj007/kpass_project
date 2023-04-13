@@ -2,5 +2,36 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.homePage, name='bushome')
+    path('', views.homePage, name='bushome'), 
+    path('schoolregister/', views.SchoolRegisterPage, name='bschoolregister'),
+    path('school/', views.SchoolPage, name='bschool'),
+    path('bustime/', views.BusSubTimes, name='bbustime'),
+    # path('tpass/', views.TPassPage, name='tpass'),
+    path('bpass/', views.BPassPage, name='bbpass'),
+    # path('tspass/', views.TSPassPage, name='tspass'),
+    path('bpassedit/<str:pk>/', views.BPassEditPage, name='bbpassedit'),
+    # path('tpassedit/<str:pk>/', views.TPassEditPage, name='tpassedit'),
+    # path('tspassedit/<str:pk>/', views.TSPassEditPage, name='tspassedit'),
+    path('deletebpass/<str:pk>/', views.DeleteBPass, name='bdeletebpass'),
+    # path('deletetpass/<str:pk>/', views.DeleteTPass, name='deletetpass'),
+    # path('deletetspass/<str:pk>/', views.DeleteTSPass, name='deletetspass'),
+    path('busplace/', views.BusPlacePage, name='bbusplace'),
+    path('busplaceregister/', views.BusPlaceRegister, name='bbusplaceregister'),
+    # path('trainplaceregister/', views.TrainPlaceRegister, name='trainplaceregister'),
+    path('schooledit/<str:pk>/', views.SchoolEditPage, name='bschooledit'),
+    path('busplaceedit/<str:pk>/', views.BusPlaceEditPage, name='bbusplaceedit'),
+    path('bustimeregister/', views.BusTimeRegister, name='bbustimeregister'),
+    path('bustimeedit/<str:pk>/', views.BusTimeEditPage, name='bbustimeedit'),
+    path('deletebustime/<str:pk>/', views.DeleteBusTime, name='bdeletebustime'),
+    path('deletebusplace/<str:pk>/', views.DeleteBusPlace, name='bdeletebusplace'),
+    path('deleteschool/<str:pk>/', views.DeleteSchool, name='bdeleteschool'),
+    path('busroute/', views.BusRoutePage, name='busroute'),
+    path('busrouteregister/', views.BusRouteRegister, name='busrouteregister'),
+    path('deletebusroute/<str:pk>/', views.DeletebusRoute, name='deletebusroute'),
+    path('busrouteedit/<str:pk>/', views.BusRouteEditPage, name='busrouteedit'),
+    path('busesview/', views.BusesPage, name='busesview'),
+    path('deletebuses/<str:pk>/', views.Deletebuses, name='deletebuses'),
+    path('busesregister/', views.BusesRegister, name='busesregister'),
+    path('busesedit/<str:pk>/', views.BusesEditPage, name='busesedit'),
+
 ]

@@ -29,8 +29,10 @@ def homePage(request):
     unpaid_train_pass_form = TrainStudentPassForm.objects.filter(paid=False).count()
     unpaid_pass_form_count = PassForm.objects.filter(paid=False).count()
     total_pending_pass = unpaid_pass_form_count+unpaid_train_pass_form
-    pass_form = PassForm.objects.filter(paid=True).order_by('-id')[:3]
-    pass_forms=PassForm.objects.filter(paid=True).order_by('-id')[:3]
+    pass_form = PassForm.objects.filter(paid=True).order_by('-id')[:4]
+    pass_forms=PassForm.objects.filter(paid=True).order_by('-id')[:4]
+    train_route = TrainRoute.objects.all()
+    bus_routes = BusRoute.objects.all()
 
 
 
@@ -42,6 +44,8 @@ def homePage(request):
         'total_payment' : total_payment,
         'total_pending_pass' : total_pending_pass,
         'pass_forms' : pass_forms,
+        'train_route': train_route,
+        'bus_routes' : bus_routes,
         }
 
     return render(request, 'adminhome.html', context )
@@ -386,7 +390,7 @@ def TrainRouteEditPage(request, pk):
 
 
 def DeleteTrainRoute(request, pk):
-    school_details = irctc.TrainPlace.objects.get(id=pk)
+    school_details = irctc.TrainRoute.objects.get(id=pk)
     school_details.delete()
     return redirect('trainroute')
 
